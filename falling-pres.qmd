@@ -1,0 +1,788 @@
+---
+title: "Falling Moments and Thin Numbers"
+author: "Matthew Aldridge"
+format: 
+  revealjs:
+    html-math-method: mathjax
+---
+
+# Introduction
+
+<style>
+mjx-container[display="true"] {
+   margin: .5em 0 ! important
+}
+</style>
+
+## {data-menu-title="A tweet"}
+
+![](tweet.png)
+
+
+## Contents
+
+1. Things you probably already know
+   * Moments, MGFs, scaling
+   * Law of large numbers
+2. Things you perhaps know, but may have forgotten:
+   * Falling moments, FMGFs, thinning
+   * "Law of thin numbers"
+3. (Maybe) What about the central limit theorem?
+
+## Warning
+
+* This is not a proper research
+* I don't claim anything here is novel (see, eg, Jørgensen & Kokonendji, 2016)
+* I'll try not to go beyond second-year undergraduate probability
+
+::: aside
+B Jørgensen & C Kokonendji, ["Discrete dispersion models and their Tweedie asymptotics"](https://doi.org/10.1007/s10182-015-0250-z), *AStA Advances in Statistical Analysis*, 2016 
+:::
+
+## Falling/rising factorials
+
+* Falling factorial:
+
+$$ n^\underline{k} = n(n-1)\cdots(n-k+1) $$
+
+* Rising factorial:
+
+$$ n^\overline{k} = n(n+1)\cdots(n+k-1) $$
+
+# 1. Moments, MGFs, scaling, law of large numbers
+
+## Moments
+
+For a random variable $X$ the **$k$th moment** $\mathbb E X^k$ is the expectation of the $k$th power.
+
+. . .
+
+* 0th moment $\mathbb EX^0 = 1$
+* 1st moment $\mathbb EX^1 = \mathbb EX$: expectation (or "mean")
+* 2nd moment $\mathbb EX^2 = \operatorname{Var}(X) + (\mathbb EX)^2$: related to the variance
+
+## The moment problem
+
+**"The moment problem":** *Given the moments $\mathbb E X^k$ of a random variable, can you recover its distribution?*
+
+. . .
+
+*Answer:* Yes, if the distribution is nice enough.
+
+(All our distributions are nice enough.)
+
+## Moments: examples
+
+| Distribution | Moments |
+|:-:|:-:|
+| Exponential$(1/\theta)$ | $\mathbb E X^k = k!\, \theta^k$ |
+| Gamma$(\nu,1/\theta)$ | $\mathbb E X^k = \nu^{\overline{k}}\, \theta^k$ | 
+| Point mass at $\mu$ | $\mathbb E X^k = \mu^k$ |
+| &nbsp; <br /> Normal$(\mu, \sigma^2)$ | $\mathbb EX^0 = 1$ <br /> $\mathbb EX^1 = \mu$<br /> $\mathbb EX^{k+1} = \mu \, \mathbb EX^k + k\sigma^2 \,\mathbb EX^{k-1}$ |
+
+## MGF
+
+A useful way to deal with the moments of $X$ is through the **moment generating function** (MGF)
+
+$$ M_X(t) = \mathbb E \, \mathrm{e}^{tX}$$
+
+. . .
+
+"Exponential generating function" for the moments:
+
+$$ M_X(t) = \mathbb E \, \mathrm{e}^{tX} = \mathbb E \sum_{k=0}^\infty \frac{(tX)^k}{k!} = \sum_{k=0}^\infty \mathbb E X^k \, \frac{t^k}{k!}$$
+
+## Moments and MGF
+
+Can build the MGF from the moments:
+$$ M_X(t) = \mathbb E \, \mathrm{e}^{tX} = \sum_{k=0}^\infty \mathbb E X^k \, \frac{t^k}{k!}$$
+
+Can recover the moments from the MGF:
+$$ \mathbb EX^k = \left. \frac{\mathrm{d}^k}{\mathrm{d}t^k} M_X \right|_{t=0} = M^{(k)}_X(0) . $$
+
+## MGFs: examples
+
+| Distribution | MGF |
+|:-:|:-:|
+| Exponential$(1/\theta)$ | $M_X(t) = (1 - \theta t)^{-1}$ |
+| Gamma$(\nu,1/\theta)$ | $M_X(t) = (1 - \theta t)^{-\nu}$ | 
+| Point mass at $\mu$ | $M_X(t) = \mathrm{e}^{\mu t}$ |
+| Normal$(\mu, \sigma^2)$ | $M_X(t) = \mathrm{e}^{\mu t + \sigma^2 t^2/2}$ |
+
+## Scaling
+
+**Scaling** means multiplying the random variable $X$ by a constant $a \in \mathbb R$ to get $aX$.
+
+. . .
+
+Scaling works well with moments:
+$$ \mathbb E(aX)^k = a^k \, \mathbb EX^k $$
+
+<!--
+## Scaled moments: examples {.smaller}
+
+&nbsp;
+
+| Distribution | Moments | Scaled moments | Scaled distribution |
+|:-:|:-:|:-:|:-:|
+| Exponential$(1/\theta)$ | $k!\, \theta^k$ | $k!\, (a\theta)^k$ | Exponential$\big(1/(a\theta)\big)$ | 
+| Gamma$(\nu,1/\theta)$ | $\nu^{\overline{k}}\, \theta^k$ | $\nu^{\overline{k}}\, (a\theta)^k$ | Gamma$\big(\nu,1/(a\theta)\big)$ | 
+| Point mass at $\mu$ | $\mu^k$ | $(a\mu)^k$ | Point mass at $a\mu$ |
+| Normal$(\mu, \sigma^2)$ | $\mathbb EX^0 = 1$ <br /> $\mathbb EX^1 = \mu$<br /> ${\scriptstyle \mathbb EX^{k+1} = \mu \mathbb EX^k + k\sigma^2 \mathbb EX^{k-1}}$ | $\mathbb EX^0 = 1$ <br /> $\mathbb EX^1 = a\mu$<br /> ${\scriptstyle \mathbb EX^{k+1} = a\mu \mathbb EX^k + ka^2\sigma^2 \mathbb EX^{k-1}}$ | &nbsp; <br /> Normal$(a\mu, a^2\sigma^2)$ |
+-->
+
+## Scaling and MGFs
+
+**Scaling** means multiplying the random variable $X$ by a constant $a \in \mathbb R$ to get $aX$.
+
+Scaling works well with MGFs:
+$$ M_{aX}(t) = \mathbb E\, \mathrm{e}^{t(aX)} = \mathbb E\, \mathrm{e}^{(at)X} = M_X(at) $$
+
+## Scaled MGFs: examples {.smaller}
+
+&nbsp;
+
+| Distribution | MGF | Scaled MGF | Scaled distribution |
+|:--:|:-:|:-:|:--:|
+| Exponential$(1/\theta)$ | $(1 - \theta t)^{-1}$ | $(1 - a\theta t)^{-1}$ | Exponential$\big(1/(a\theta)\big)$ | 
+| Gamma$(\nu,1/\theta)$ | $(1 - \theta t)^{-\nu}$ | $(1 - a\theta t)^{-\nu}$ | Gamma$\big(\nu,1/(a\theta)\big)$ | 
+| Point mass at $\mu$ | $\mathrm{e}^{\mu t}$ | $\mathrm{e}^{a\mu t}$ | Point mass at $a\mu$ |
+| Normal$(\mu, \sigma^2)$ | $\mathrm{e}^{\mu t + \sigma^2 t^2/2}$ | $\mathrm{e}^{a\mu t + a^2\sigma^2 t^2/2}$ | Normal$(a\mu, a^2\sigma^2)$ |
+
+## Adding
+
+Adding independent random variables works well with MGFs.
+
+If $X$ and $Y$ are independent,
+$$ \begin{multline*}
+M_{X+Y}(t) = \mathbb E\,\mathrm{e}^{t(X+Y)} = \mathbb E\big(\mathrm{e}^{tX}\,\mathrm{e}^{tY}\big) \\
+=  \big(\mathbb E\,\mathrm{e}^{tX}\big)\big( \mathbb E\,\mathrm{e}^{tY}\big) = M_X(t)\,M_Y(t)
+\end{multline*}$$
+
+## Adding: examples {.smaller}
+
+* Exponential$(1/\theta)$ + Exponential$(1/\theta)$ = Gamma$(2, 1/\theta)$
+$$ (1 - \theta t)^{-1}(1 - \theta t)^{-1} = (1 - \theta t)^{-2} $$
+
+::: {.incremental}
+* Gamma$(\nu_1, 1/\theta)$ + Gamma$(\nu_2, 1/\theta)$ = Gamma$(\nu_1 + \nu_2, 1/\theta)$
+$$ (1 - \theta t)^{-\nu_1}(1 - \theta t)^{-\nu_2} = (1 - \theta t)^{-(\nu_1+\nu_2)} $$
+
+* Point mass at $\mu_1$ + Point mass at $\mu_2$ = Point mass at $\mu_1 + \mu_2$
+$$ \mathrm{e}^{\mu_1 t}\,\mathrm{e}^{\mu_2 t} = \mathrm{e}^{(\mu_1 + \mu_2) t}$$
+
+* Normal$(\mu_1, \sigma^2_1)$ + Normal$(\mu_2, \sigma^2_2)$ = Normal$(\mu_1 + \mu_2, \sigma^2_1 + \sigma_2^2)$
+$$ \mathrm{e}^{\mu_1 t + \sigma_1^2 t^2/2}\,\mathrm{e}^{\mu_2 t + \sigma_2^2 t^2/2} = \mathrm{e}^{(\mu_1 + \mu_2) t + (\sigma_1^2 + \sigma_2^2)t^2/2}$$
+:::
+
+## Law of large numbers  {auto-animate=true}
+
+**Theorem (Law of large numbers).** *Let $X_1, X_2, \dots$ be IID random variables with expectation $\mathbb EX_1 = \mu$. Write $Y_n$ for the scaled sum*
+
+$$ Y_n = \frac{1}{n} \big(X_1 + X_2 + \cdots + X_n\big) . $$
+
+*Then*
+
+$$Y_n \to \mu \qquad \text{as $n \to \infty$} $$
+
+*in probability.*
+
+## Law of large numbers (2)  {auto-animate=true}
+
+**Theorem (Law of large numbers).** *Let $X_1, X_2, \dots$ be IID random variables with expectation $\mathbb EX_1 = \mu$. Write $Y_n$ for the scaled sum*
+
+$$ Y_n = \frac{1}{n} \big(X_1 + X_2 + \cdots + X_n\big) . $$
+
+*Then*
+
+$$Y_n \to \delta(\mu) \qquad \text{as $n \to \infty$} $$
+
+*in* *distribution.*
+
+## Law of large numbers: Proof {.smaller}
+
+$$ Y_n = \frac{1}{n} \big(X_1 + X_2 + \cdots + X_n\big)  $$
+
+. . .
+
+So the MGF of $Y_n$ is
+$$ M_{Y_n}(t) = M_X\left(\frac{t}{n}\right)^n $$
+
+. . .
+
+Let's approximate
+$$ M_X(t) = \sum_{k=0}^\infty \mathbb EX^k \, \frac{t^k}{k!} = 1 + \mu t + \cdots $$
+
+. . .
+
+$$ M_{Y_n}(t) = M_X\left(\frac{t}{n}\right)^n = \left(1 + \frac{\mu t}{n} + \cdots \right)^n \to \mathrm{e}^{\mu t}$$
+
+. . .
+
+But $\mathrm{e}^{\mu t}$ is the MGF of a point mass at $\mu$. [&#9634;]{style="float: right"}
+
+## Part 1 conclusions
+
+* The **moments** are $\mathbb EX^k$
+* The **MGF** is ${\displaystyle M_X(t) = \mathbb E\, \mathrm{e}^{tX} = \sum_{k=0}^\infty \mathbb EX^k \, \frac{t^k}{k!}}$
+* **Adding** independent RVs: $M_{X+Y}(t) = M_X(t)\,M_Y(t)$
+* **Scaling**: $M_{aX}(t) = M_X(at)$
+* **Law of large numbers**: If
+$Y_n = \frac{1}{n} (X_1 + X_2 + \cdots + X_n)$, then
+$M_{Y_n}(t) = M_X\big(\frac{t}{n}\big)^n \to \mathrm{e}^{\mu t}$,  
+which is the MGF of the point mass $\delta(\mu)$.
+
+# 2. Falling moments, FMGFs, thinning, law of thin numbers
+
+## Discrete counts
+
+We're now looking discrete random variables...
+
+...specifically, "count random variables" that take values in the non-negative integers
+$$\{0, 1, 2, \dots\}$$
+
+. . .
+
+Examples:
+
+::: {.column width="30%"}
+* Bernoulli
+* binomial
+:::
+
+::: {.column width="36%"}
+* geometric
+* negative binomial
+:::
+
+::: {.column width="30%"}
+* Poisson
+:::
+
+## Moments of discrete distributions {.smaller}
+
+| Distribution | Moments |
+|:-:|:-:|
+| Bernoulli$(p)$ | $\mathbb E X^k = p$ |
+| Binomial$(n, p)$ | ${\displaystyle \mathbb E X^k = \sum_{j=1}^k \genfrac{\lbrace}{\rbrace}{0pt}{}{k}{j} n^{\underline{j}} p^j}$ <br /> where $\genfrac{\lbrace}{\rbrace}{0pt}{}{k}{j}$ are Stirling numbers <br /> of the second kind |
+| Geometric$(p)$ | $\mathbb E X^k = p \operatorname{Li}_{-k} (1-p)$ <br /> where $\operatorname{Li}_{-k}$ is a polylogarithm function |
+| NegBin$(n,p)$ | *(Neither Wikipedia nor MathWorld say)* |
+| Poisson$(\mu)$ | ${\displaystyle \mathbb E X^k = \sum_{j=1}^k \genfrac{\lbrace}{\rbrace}{0pt}{}{k}{j} \lambda^j}$  <br /> where $\genfrac{\lbrace}{\rbrace}{0pt}{}{k}{j}$ are Stirling numbers <br /> of the second kind |
+
+## Calculating 2nd moments
+
+* Geometric$(p)$:
+$$ \mathbb EX^2 = \sum_{x=0}^\infty x^2 (1-p)^xp $$
+
+* Poisson$(\mu)$:
+$$ \mathbb EX^2 = \sum_{x=0}^\infty x^2\,\mathrm{e}^{-\mu}\, \frac{\mu^x}{x!} $$
+
+## Calculating 2nd moments: alternative {.smaller}
+
+It's easier to calculate $\mathbb EX(X-1)$ then work out $\mathbb EX^2$
+
+. . .
+
+* Geometric$(p)$:
+$$ \begin{align*}
+\mathbb EX(X-1) &= \sum_{x=0}^\infty x(x-1) (1-p)^x p \\
+&= p(1-p)^2 \sum_{x=0}^\infty x(x-1) (1-p)^{x-2}
+\end{align*} $$
+
+. . .
+
+* Poisson$(\mu)$:
+$$ \mathbb EX(X-1) = \sum_{x=0}^\infty x(x-1)\,\mathrm{e}^{-\mu}\, \frac{\mu^x}{x!} = \mathrm{e}^{-\mu}\,\mu^2 \sum_{x=0}^\infty \frac{\mu^{x-2}}{(x-2)!} $$
+
+## Falling moments
+
+$\mathbb EX(X-1)$ is the first interesting example of the **falling moments** (or **factorial moments**)
+$$ \mathbb E X^{\underline{k}} = \mathbb E X(X-1) \cdots (X-k+1) $$
+
+* $\mathbb EX^{\underline{0}} = 1$
+* $\mathbb EX^{\underline{1}} = \mathbb EX$
+* $\mathbb EX^{\underline{2}} = \mathbb EX(X-1)$
+
+## Falling moments: examples
+
+| Distribution | Falling moments |
+|:-:|:-:|
+| Bernoulli$(p)$ | $\mathbb E X^{\underline{1}} = p$, then $E X^{\underline{k}} = 0$ |
+| Binomial$(n, p)$ | $\mathbb E X^{\underline{k}} = n^{\underline{k}} \,p^k$ |
+| Geometric$(p)$ | $\mathbb E X^{\underline{k}} = k! {\displaystyle \left(\frac{1-p}{p}\right)^k }$ |
+| NegBin$(n,p)$ | $\mathbb E X^{\underline{k}} = n^{\overline{k}} {\displaystyle \left(\frac{1-p}{p}\right)^k }$ |
+| Poisson$(\mu)$ | $\mathbb E X^{\underline{k}} = \mu^k$ |
+
+## Falling moments: examples (2)
+
+| Distribution | Falling moments |
+|:-:|:-:|
+| Bernoulli$(\theta)$ | $\mathbb E X^{\underline{1}} = \theta$, then $E X^{\underline{k}} = 0$ |
+| Binomial$(n, \theta)$ | $\mathbb E X^{\underline{k}} = n^{\underline{k}} \,\theta^k$ |
+| Geometric$(\frac{1}{1+\theta})$ | $\mathbb E X^{\underline{k}} = k! \,\theta^k$ |
+| NegBin$(n,\frac{1}{1+\theta})$ | $\mathbb E X^{\underline{k}} = n^{\overline{k}} \,\theta^k$ |
+| Poisson$(\mu)$ | $\mathbb E X^{\underline{k}} = \mu^k$ |
+
+## FMGF
+
+If the **moment generating function** (MGF)
+$$ M_X(t) = \sum_{k=0}^\infty \mathbb EX^k \, \frac{t^k}{k!}  $$
+generates the moments...
+
+...then a **falling moment generating function** (FMGF)
+$$ \Phi_X(t) = \sum_{k=0}^\infty \mathbb EX^{\underline k} \, \frac{t^k}{k!}  $$
+ought to generate the falling moments.
+
+## FMGF (alternative expression)
+
+The **falling moment generating function** (FMGF) can also be written as
+$$ \begin{align*}
+\Phi_X(t) &= \sum_{k=0}^\infty \mathbb EX^{\underline k} \, \frac{t^k}{k!}  \\
+&= \mathbb E\sum_{k=0}^\infty \binom{X}{k} \, t^k \\
+&= \mathbb E(1+t)^X
+\end{align*} $$
+
+## FMGF
+
+$$ \Phi_X(t) = \mathbb E(1+t)^X $$
+
+This is very similar to the well-known  
+**probability generating function**
+$$G_X(t) = \mathbb E t^X = \sum_{k=0}^\infty \mathbb P(X = k)\, t^k $$
+
+Specifically, $M_X(t) = G_X(1+t)$.
+
+## {data-menu-title="A tweet again"}
+
+![](tweet.png)
+
+## FMGF: examples
+
+| Distribution | FMGF |
+|:-:|:-:|
+| Bernoulli$(\theta)$ | $\Phi_X(t) = 1 + \theta t$ |
+| Binomial$(n, \theta)$ | $\Phi_X(t) = (1 + \theta t)^n$ |
+| Geometric$(\frac{1}{1+\theta})$ | $\Phi_X(t) = (1 - \theta t)^{-1}$ |
+| NegBin$(n,\frac{1}{1+\theta})$ | $\Phi_X(t) = (1 - \theta t)^{-n}$ |
+| Poisson$(\mu)$ | $\Phi_X(t) = \mathrm{e}^{\mu t}$ |
+
+## MGFs and FMGFs
+
+| Distribution | MGF / FMGF | Distribution |
+|:-:|:-:|:-:|
+| --- | $1 + \theta t$ | Bernoulli$(\theta)$ |
+| --- | $(1 + \theta t)^n$ | Binomial$(n, \theta)$ |
+| Exponential$\big(\frac{1}{\theta}\big)$ | $(1 - \theta t)^{-1}$ | Geometric$\big(\frac{1}{1+\theta}\big)$ |
+| Gamma$\big(n, \frac{1}{\theta}\big)$ | $(1 - \theta t)^{-n}$ | NegBin$\big(n, \frac{1}{1+\theta}\big)$ |
+| Point mass $\delta(\mu)$ | $\mathrm{e}^{\mu t}$ | Poisson$(\mu)$ |
+
+## Law of small numbers
+
+Poisson approximation to the binomial
+
+**Theorem (Law of small numbers).** *Let $X_n \sim \operatorname{Bin}\big(n, \frac{\mu}{n} \big)$ and $Y \sim \operatorname{Po}(\mu)$. Then $X_n \to Y$ in distribution as $n \to \infty$.*
+
+## {data-menu-title="Law of small numbers: Proof from lectures"}
+
+![](lecture.png)
+
+## Law of small numbers: Proof
+
+**Theorem (Law of small numbers).** *Let $X_n \sim \operatorname{Bin}\big(n, \frac{\mu}{n} \big)$ and $Y \sim \operatorname{Po}(\mu)$. Then $X_n \to Y$ in distribution as $n \to \infty$.*
+
+*Proof.* The FMGF of $X_n$ is
+$$ \Phi_{X_n}(t) = \left(1 + \frac{\mu t}{n}\right)^n \to \mathrm{e}^{\mu t} = \Phi_Y(t) , $$
+which is the FMGF of $Y$. [&#9634;]{style="float: right"}
+
+## Reminder: properties of MGF
+
+* **Addition** of independent RVs:
+$$ M_{X+Y}(t) = M_X(t) \, M_Y(t) $$
+* **Scaling**:
+$$ M_{aX}(t) = M_X(at) $$
+
+## Addition for FMGFs
+
+For independent $X$, $Y$:
+\begin{align*}
+\Phi_{X+Y} (t) &= \mathbb E (1+t)^{X+Y} \\
+  &= \mathbb E (1+t)^X(1+t)^Y \\
+  &= \big(\mathbb E(1+t)^X\big)\big(\mathbb E(1+t)^Y\big) \\
+  &= \Phi_X(t) \, \Phi_Y(t)
+\end{align*}
+
+## Addition examples
+
+* Bernoulli$(p)$ + Bernoulli$(p)$ = Binomial$(2, p)$
+* Binomial$(n_1, p)$ + Binomial$(n_2, p)$ = Binomial$(n_1 + n_2, p)$
+* Geometric$(p)$ + Geometric$(p)$ = NegBin$(2, p)$
+* NegBin$(n_1, p)$ + NegBin$(n_2, p)$ = NegBin$(n_1 + n_2, p)$
+* Poisson$(\mu_1)$ + Poisson$(\mu_2)$ = Poisson$(\mu_1 + \mu_2)$
+$$ \mathrm{e}^{\mu_1 t}\,\mathrm{e}^{\mu_2 t} = \mathrm{e}^{(\mu_1+\mu_2) t} $$
+
+## Scaling...?
+
+**Scaling** doesn't really work for discrete counting random variables.
+
+. . .
+
+If $X$ takes values in
+$$\{0,1,2,3,4\dots\} , $$
+then $0.7X$ takes values in
+$$\{0, 0.7, 1.4, 2.1, 2.8, \dots\}, $$
+which isn't a counting random variable any more.
+
+## Thinning
+
+Better than scaling is **thinning** (Rényi, 1956):
+
+* I throw a random number $X$ of balls to you
+* You try to catch them:
+  * you catch each ball independently with probability $a$
+  * you drop each ball with probability $1-a$
+* The number of balls you catch is $Y = a\circ X$, the **$a$-thinning** of $X$.
+
+::: aside
+A Rényi, ["A Poisson-folyamat egy jellemzése"](http://real-j.mtak.hu/507/) ["A characterisation of Poisson processes"], *A Magyar Tudományos Akadémia Matematikai Kutató Intézetének Közleményei*, 1956.
+:::
+
+
+## Thinning: definition
+
+**Definition.** Let $X$ be a discrete counting random variable, and $a \in [0,1]$ a constant. Then the **$a$-thinning** $a\circ X$ of $X$ has conditional distribution, given $X$, of
+$$ (a \circ X) \mid X \sim \text{Bin}(X, a) . $$
+
+Equivalently, $a\circ X$ is a random sum
+$$ a \circ X = \sum_{i=1}^X B_i , $$
+where the $B_i$ are IID Bernoulli$(a)$.
+
+## Thinning examples (1)
+
+Clearly:
+
+* $a \circ \text{Bern}(\theta) = \text{Bern}(a\theta)$
+* $a \circ \text{Bin}(n, \theta) = \text{Bin}(n, a\theta)$
+
+What about geometric, negative binomial, Poisson, ...?
+
+## Thinning and FMGFs
+
+::: {.column width="49%"}
+**Theorem.** *Let $X$ be a*  
+*random variable with MGF*  
+*$M_X$, and let $a \in \mathbb R$. Then*  
+*the MGF of the $a$-scaling*  
+$aX$ *is* $M_{aX}(t) = M(at)$.
+
+*In particular, the*  
+*moments are*  
+$\mathbb E(aX)^k = a^k \,\mathbb EX^k$.
+:::
+
+::: {.column width="49%"}
+**Theorem.** *Let $X$ be a discrete random variable with FMGF $\Phi_X$, and let $a \in [0,1]$. Then the FMGF of the $a$-thinning $a \circ X$ is \, $\Phi_{a\circ X}(t) = \Phi(at)$.*
+
+*In particular, the*  
+*falling moments are*  
+$\mathbb E(a\circ X)^{\underline k} = a^k \, \mathbb EX^{\underline k}$.
+:::
+
+## Thinning and FMGFs: proof
+
+*Proof.*
+
+\begin{align*}
+\Phi_{a\circ X}(t) &= \mathbb E(1+t)^{a \circ X} \\
+  &= \mathbb E\, \mathbb E \big((1+t)^{a \circ X} \ \mid X\big) \\
+  &= \mathbb E \Phi_{\operatorname{Bin}(X,a)}(t) \\
+  &= \mathbb E (1 + at)^X \\
+  &= \Phi_X(at)
+\end{align*}
+
+[&#9634;]{style="float: right"}
+
+## Thinning examples (2)
+
+* $a \circ \text{Bern}(\theta) = \text{Bern}(a\theta)$
+* $a \circ \text{Bin}(n, \theta) = \text{Bin}(n, a\theta)$
+* $a \circ \operatorname{Geom}\big(\frac{1}{1+\theta}\big) = \operatorname{Geom}\big(\frac{1}{1+a\theta}\big)$
+  * $\big(1 - \theta(at)\big)^{-1} = \big(1 - (a\theta)t\big)^{-1}$
+* $a \circ \operatorname{NegBin}\big(n, \frac{1}{1+\theta}\big) = \operatorname{NegBin}\big(n, \frac{1}{1+a\theta}\big)$
+  * $\big(1 - \theta(at)\big)^{-n} = \big(1 - (a\theta)t\big)^{-n}$
+* $a \circ \operatorname{Po}(\mu) = \operatorname{Po}(a\mu)$
+  * $\mathrm{e}^{\mu(at)} = \mathrm{e}^{(a\mu)at}$
+
+## Reminder: Law of large numbers
+
+**Theorem (Law of large numbers).** *Let $X_1, X_2, \dots$ be IID random variables with expectation $\mathbb EX_1 = \mu$. Write $Y_n$ for the scaled sum*
+$$ Y_n = \frac{1}{n} (X_1 + \cdots + X_n) . $$
+*Then $Y_n \to \delta(\mu)$ in distribution as $n \to \infty$.*
+
+. . .
+
+This does apply for count random variables, but is not "authentically discrete".
+  
+## Law of thin numbers
+
+This result is called the "law of thin numbers" by Harremoës, Johnson and Kontoyiannis (2010).
+
+**Theorem (Law of thin numbers).** *Let $X_1, X_2, \dots$ be IID discrete counting random variables with expectation $\mathbb EX_1 = \mu$. Write $Y_n$ for the thinned sum*
+$$ Y_n = \frac{1}{n} \circ \big(X_1 + \cdots + X_n\big) . $$
+*Then $Y_n \to \operatorname{Po}(\mu)$ in distribution as $n \to \infty$.*
+
+::: aside
+P Harremoës, O Johnson & I Kontoyiannis, ["Thinning, entropy, and the law of thin numbers"](https://doi.org/10.1109/TIT.2010.2053893), *IEEE Transactions on Information Theory*, 2010.
+:::
+
+## Laws of large and thin numbers
+
+::: {.column width="49%"}
+**Theorem (Law of large numbers).** *Let* $X_1, X_2, \dots$  
+*be IID*  
+*random variables*  
+*with expectation $\mathbb EX_1 = \mu$.*  
+*Write $Y_n$ for the scaled sum*
+$$ Y_n = \tfrac{1}{n} (X_1 + \cdots + X_n) . $$
+*Then $Y_n \to \delta(\mu)$*  
+*in distribution as $n \to \infty$.*
+:::
+
+::: {.column width="49%"}
+**Theorem (Law of thin numbers).** *Let* $X_1, X_2, \dots$  
+*be IID discrete counting random variables*  
+*with expectation $\mathbb EX_1 = \mu$.*  
+*Write $Y_n$ for the thinned sum*
+$$ Y_n = \tfrac{1}{n} \circ (X_1 + \cdots + X_n) . $$
+*Then $Y_n \to \operatorname{Po}(\mu)$*  
+*in distribution as $n \to \infty$.*
+:::
+
+## Law of thin numbers: Proof {.smaller}
+
+$$ Y_n = \frac{1}{n} \circ \big(X_1 + X_2 + \cdots + X_n\big)  $$
+
+So the FMGF of $Y_n$ is
+$$ \Phi_{Y_n}(t) = \Phi_X\Big(\frac{t}{n}\Big)^n $$
+
+Let's approximate
+$$ \Phi_X(t) = \sum_{k=0}^\infty \mathbb EX^\underline{k} \, \frac{t^k}{k!} = 1 + \mu t + \cdots $$
+
+$$ \Phi_{Y_n}(t) = \Phi_X\left(\frac{t}{n}\right)^n = \left(1 + \frac{\mu t}{n} + \cdots \right)^n \to \mathrm{e}^{\mu t}$$
+
+But $\mathrm{e}^{\mu t}$ is the FMGF of a Poisson($\mu$) distribution. [&#9634;]{style="float: right"}
+
+## Conclusion: A dictionary
+
+| General RVs | Counting RVs |
+|:-:|:-:|
+| Moments | Falling moments |
+| Moment <br /> generating function | Falling moment <br /> generating function |
+| Adding independent RVs | Adding independent RVs |
+| Scaling | Thinning |
+| Point mass | Poisson distribution |
+| Law of large numbers | Law of thin numbers |
+
+# What about the central limit theorem?
+
+## Central limit theorem
+
+**Theorem (Central limit theorem).** *Let $X_1, X_2, \dots$ be IID random variables with expectation $\mathbb EX_1 = \mu$ and variance $\sigma^2$. Write $Y_n$ for the scaled and shifted sum*
+$$ Y_n = \frac{1}{\sqrt{n}} \big((X_1 + \cdots + X_n) - n\mu\big) . $$
+*Then $Y_n \to \operatorname{N}(0, \sigma^2)$ in distribution as $n \to \infty$.*
+
+## Ingredients of CLT
+
+$$ \frac{1}{\sqrt{n}} \big((X_1 + \cdots + X_n) - n\mu\big) \to \operatorname{N}(0, \sigma^2) $$
+
+. . .
+
+* Expectation
+* Variance
+* Adding independent random variables
+* Shifting
+* Scaling
+* The normal distribution
+
+## Stock-take
+
+| Continuous | Discrete |
+|:-:|:-:|
+| Expectation $\mathbb EX$ | Expectation $\mathbb EX$ |
+| Variance $\operatorname{Var}(X)$ | ??? |
+| Adding independent RVs $X+Y$ | Adding independent RVs $X+Y$ |
+| Shifting $X + b$ | ??? |
+| Scaling $aX$ | Thinning $a \circ X$ |
+| Normal distribution | ??? |
+| Central limit theorem | ??? |
+
+## Dispersion: Motivation {.smaller}
+
+::: {.column width="49%"}
+* Often, we model "measurement data" using a fixed value $X = \mu$.
+
+* This forces $\operatorname{Var}(X) = 0$.
+  * Equivalently, this forces $\mathbb EX^{2} = \mu^2$.
+
+* But often, real-life data is  
+"noisy", in that the variance is  
+*bigger* than 0.
+  * This requires a model with $\mathbb EX^{2} > \mu^2$
+:::
+
+:::: {.column width="49%"}
+:::  {.fragment}
+* Often, we model "count data" using the Poisson$(\mu)$ distribution.
+
+* This forces $\operatorname{Var}(X) = \mu$.
+  * Equivalently, this forces $\mathbb EX^{\underline{2}} = \mu^2$.
+
+* But often, real-life data is  
+"over-dispersed", in that the variance is *bigger* than the mean.
+  * This requires a model with $\mathbb EX^{\underline{2}} > \mu^2$
+:::
+::::
+  
+## Dispersion: Definition
+
+**Variance:** $\operatorname{Var}(X) = \mathbb EX^2 - (\mathbb EX)^2$
+
+**Dispersion:** $\operatorname{Disp}(X) = \mathbb EX^{\underline{2}} - \mathbb EX^2$.
+
+. . .
+
+Can't be *any* values:
+
+* $\operatorname{Var}(X) \geq 0$
+* $\operatorname{Disp}(X) \geq -\mu$
+
+Benchmarks:
+
+* $\operatorname{Var}\big(\delta(\mu)\big) = 0$, smallest possible
+* $\operatorname{Disp}\big(\operatorname{Po}(\mu)\big) = 0$, *not* smallest possible
+
+
+## Variance and dispersion: Examples
+
+| Distribution | Var/Disp | Distribution |
+|:-:|:-:|:-:|
+| Exponential$\big(\frac{1}{\theta}\big)$ | $\theta^2$ | Geometric$\big(\frac{1}{1+\theta}\big)$ |
+| Gamma$\big(n, \frac{1}{\theta}\big)$ | $n\theta^2$ | NegBin$\big(n, \frac{1}{1+\theta}\big)$ |
+| Point mass $\delta(\mu)$ | $0$ | Poisson$(\mu)$ |
+| --- | $-\theta^2$ | Bernoulli$(\theta)$ |
+| --- | $-n\theta^2$ | Binomial$(n, \theta)$ |
+
+## Stock-take (2)
+
+| Continuous | Discrete |
+|:-:|:-:|
+| Expectation $\mathbb EX$ | Expectation $\mathbb EX$ |
+| Variance $\operatorname{Var}(X)$ | **Dispersion** $\operatorname{Disp}(X)$ |
+| Adding independent RVs $X+Y$ | Adding independent RVs $X+Y$ |
+| Shifting $X + b$ | ??? |
+| Scaling $aX$ | Thinning $a \circ X$ |
+| Normal distribution | ??? |
+| Central limit theorem | ??? |
+
+## Shifting and Poisson shifting {.smaller}
+
+::: {.column width="49%"}
+**Shifting** by $b$ means adding  
+a point mass $\delta(b)$  
+to $X$, to get $X + b$
+
+* $\mathbb E(X+b) = \mathbb EX + b$
+* $\operatorname{Var}(X+b) = \operatorname{Var}(X)$
+* $(X+b)+c = X + (b+c)$
+* $M_{X+b}(t) = \mathrm{e}^{bt}\,M_X(t)$
+:::
+
+:::: {.column width="49%"}
+:::  {.fragment}
+**Poisson shifting** by $b \geq 0$ means adding  
+an independent Poisson distribution $\operatorname{Po}(b)$  
+to $X$, to get $X \oplus b$
+
+* $\mathbb E(X\oplus b) = \mathbb EX + b$
+* $\operatorname{Disp}(X \oplus b) = \operatorname{Disp}(X)$
+* $(X\oplus b)\oplus c = X \oplus (b+c)$
+* $\Phi_{X\oplus b}(t) = \mathrm{e}^{bt}\,\Phi_X(t)$
+:::
+::::
+  
+## Poisson left shifting
+
+**Poisson shifting** by $b \geq 0$ means adding an independent Poisson distribution $\operatorname{Po}(b)$ to $X$, to get $X \oplus b$
+
+What about negative shifts?
+
+. . .
+
+$Y = X \ominus b$ should be "the distribution $Y$ such that $Y \oplus b = X$".
+
+. . .
+
+* $\operatorname{Po}(\mu) \ominus b = \operatorname{Po}(\mu - b)$ only exists for $b \leq \mu$
+* Bernoulli$(\theta) \ominus b$ does not exist for any $b > 0$.
+* Binomial$(n, \theta) \ominus b$ does not exist for any $b > 0$.
+
+## Poisson left shifting: Questions
+
+* $\operatorname{Po}(\mu) \ominus b = \operatorname{Po}(\mu - b)$ only exists for $b \leq \mu$
+* Bernoulli$(\theta) \ominus b$ does not exist for any $b > 0$.
+* Binomial$(n, \theta) \ominus b$ does not exist for any $b > 0$.
+
+**Question.** What conditions on $X$ and $b > 0$ guarantee the existence of $X \ominus b$?
+
+**Question.** For what $n$, $\theta$, $b>0$ (if any) does $\operatorname{Geom}\big(\frac{1}{1+\theta}\big)\ominus b$ or $\operatorname{NegBin}\big(n, \frac{1}{1+\theta}\big)\ominus b$ exist?
+
+## Stock-take (2)
+
+| Continuous | Discrete |
+|:-:|:-:|
+| Expectation $\mathbb EX$ | Expectation $\mathbb EX$ |
+| Variance $\operatorname{Var}(X)$ | Dispersion $\operatorname{Disp}(X)$ |
+| Adding independent RVs $X+Y$ | Adding independent RVs $X+Y$ |
+| Shifting $X + b$ | **Poisson shifting**?? |
+| Scaling $aX$ | Thinning $a \circ X$ |
+| Normal distribution | ??? |
+| Central limit theorem | ??? |
+
+## Hermite distribution
+
+The **Hermite distribution** of Kemp & Kemp (1965):
+
+* Parameters $\mu$ and $s$, where $\mu \geq s \geq 0$.
+* Let $Y \sim \operatorname{Po}(\mu - s)$ and $Z \sim \operatorname{Po}\big(\frac s2\big)$
+* The $X = Y + 2Z$ has the **Hermite distribution** $\operatorname{Herm}(\mu, s)$.
+
+::: aside
+CD Kemp & AW Kemp, ["Some properties of the 'Hermite' distribution"](https://doi.org/10.1093/biomet/52.3-4.381), *Biometrika*, 1965
+:::
+
+## Hermite distribution: Properties {.smaller}
+
+$$\operatorname{Herm}(\mu, s) = \operatorname{Po}(\mu - s) + 2\,\operatorname{Po}\big(\tfrac s2\big)$$
+
+| Normal$(\mu, \sigma^2)$ | Herm$(\mu, s)$ |
+|:-:|:-:|
+| Continuous | Discrete |
+| $\mathbb EX = \mu$ | $\mathbb EX = \mu$ |
+| $\operatorname{Var}(X) = \sigma^2$ | $\operatorname{Disp}(X) = s$ |
+| $\operatorname{N}(\mu, 0) = \delta(\mu)$ | $\operatorname{Herm}(\mu, 0) = \operatorname{Po}(\mu)$ |
+| $aX \sim \operatorname{N}(a\mu, a^2\sigma^2)$ | $a \circ X \sim \operatorname{Herm}(a\mu, a^2\sigma^2)$ |
+| $X + b \sim \operatorname{N}(\mu + b, \sigma^2)$ | $X \oplus b \sim \operatorname{Herm}(\mu+b,\sigma^2)$ |
+| $X + Y \sim \operatorname{N}(\mu_X + \mu_Y, \sigma^2_X + \sigma^2_Y)$ | $X + Y \sim \operatorname{Herm}(\mu_X + \mu_Y, \sigma^2_X + \sigma^2_Y)$ |
+| $M_X(t) = \exp\big(\mu t + \tfrac12 \sigma^2 t^2 \big)$ | $\Phi_X(t) = \exp\big(\mu t + \tfrac12 \sigma^2 t^2 \big)$ |
+| Exists for all $\sigma^2 \geq 0$ | Does not exist for $-\mu\leq s< 0$ or $s > \mu$. |
+
+## Stock-take (3)
+
+| Continuous | Discrete |
+|:-:|:-:|
+| Expectation $\mathbb EX$ | Expectation $\mathbb EX$ |
+| Variance $\operatorname{Var}(X)$ | Dispersion $\operatorname{Disp}(X)$ |
+| Adding independent RVs $X+Y$ | Adding independent RVs $X+Y$ |
+| Shifting $X + b$ | Poisson shifting?? |
+| Scaling $aX$ | Thinning $a \circ X$ |
+| Normal distribution | Hermite distribution? |
+| Central limit theorem | ??? |
