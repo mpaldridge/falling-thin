@@ -14,6 +14,16 @@ mjx-container[display="true"] {
 }
 </style>
 
+## {data-menu-title="A question"}
+
+::: {.r-fit-text}
+When dealing with discrete "counting" random variables...
+
+...what are some "authentically discrete" operations we can perform...
+
+...and what "authentically discrete" results can we get?
+:::
+
 ## {data-menu-title="A tweet"}
 
 ![](tweet.png)
@@ -27,7 +37,7 @@ mjx-container[display="true"] {
 2. Things you perhaps know, but may have forgotten:
    * Falling moments, FMGFs, thinning
    * "Law of thin numbers"
-3. (Maybe) What about the central limit theorem?
+3. What about the central limit theorem?
 
 ## Warning
 
