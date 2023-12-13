@@ -1,28 +1,31 @@
 ---
 title: "Falling Moments and Thin Numbers"
 author: "Matthew Aldridge"
-format: 
+format:
   revealjs:
     html-math-method: mathjax
 ---
 
 # Introduction
 
+## {data-menu-title="A question"}
+
+::: {.r-fit-text}
+When dealing with discrete  
+"counting" random variables...
+
+...what are some "authentically discrete"  
+operations we can perform...
+
+...and what "authentically  discrete"  
+results can we get?
+:::
+
 <style>
 mjx-container[display="true"] {
    margin: .5em 0 ! important
 }
 </style>
-
-## {data-menu-title="A question"}
-
-::: {.r-fit-text}
-When dealing with discrete "counting" random variables...
-
-...what are some "authentically discrete" operations we can perform...
-
-...and what "authentically discrete" results can we get?
-:::
 
 ## {data-menu-title="A tweet"}
 
@@ -77,7 +80,10 @@ For a random variable $X$ the **$k$th moment** $\mathbb E X^k$ is the expectatio
 
 . . .
 
-*Answer:* Yes, if the distribution is nice enough.
+*Answer:*
+
+* In general, **No** (infinite moments, or moments thar grow very large with $k$)
+* With "nice" random variables, **Yes**
 
 (All our distributions are nice enough.)
 
@@ -87,7 +93,7 @@ For a random variable $X$ the **$k$th moment** $\mathbb E X^k$ is the expectatio
 |:-:|:-:|
 | Exponential$(1/\theta)$ | $\mathbb E X^k = k!\, \theta^k$ |
 | Gamma$(\nu,1/\theta)$ | $\mathbb E X^k = \nu^{\overline{k}}\, \theta^k$ | 
-| Point mass at $\mu$ | $\mathbb E X^k = \mu^k$ |
+| Point mass$\delta(\mu)$ | $\mathbb E X^k = \mu^k$ |
 | &nbsp; <br /> Normal$(\mu, \sigma^2)$ | $\mathbb EX^0 = 1$ <br /> $\mathbb EX^1 = \mu$<br /> $\mathbb EX^{k+1} = \mu \, \mathbb EX^k + k\sigma^2 \,\mathbb EX^{k-1}$ |
 
 ## MGF
@@ -116,8 +122,18 @@ $$ \mathbb EX^k = \left. \frac{\mathrm{d}^k}{\mathrm{d}t^k} M_X \right|_{t=0} = 
 |:-:|:-:|
 | Exponential$(1/\theta)$ | $M_X(t) = (1 - \theta t)^{-1}$ |
 | Gamma$(\nu,1/\theta)$ | $M_X(t) = (1 - \theta t)^{-\nu}$ | 
-| Point mass at $\mu$ | $M_X(t) = \mathrm{e}^{\mu t}$ |
+| Point mass $\delta(\mu)$ | $M_X(t) = \mathrm{e}^{\mu t}$ |
 | Normal$(\mu, \sigma^2)$ | $M_X(t) = \mathrm{e}^{\mu t + \sigma^2 t^2/2}$ |
+
+## MGFs and limits
+
+MGFs work well with limits:
+
+If $M_{X_n}(t) \to M_Y(t)$
+
+[(in a neighbourhood of $t = 0$, with $M_Y(t)$ continuous at $t = 0$)]{style="font-size:0.7em"}
+
+then $X_n \to Y$ in distribution.
 
 ## Scaling
 
@@ -156,12 +172,14 @@ $$ M_{aX}(t) = \mathbb E\, \mathrm{e}^{t(aX)} = \mathbb E\, \mathrm{e}^{(at)X} =
 |:--:|:-:|:-:|:--:|
 | Exponential$(1/\theta)$ | $(1 - \theta t)^{-1}$ | $(1 - a\theta t)^{-1}$ | Exponential$\big(1/(a\theta)\big)$ | 
 | Gamma$(\nu,1/\theta)$ | $(1 - \theta t)^{-\nu}$ | $(1 - a\theta t)^{-\nu}$ | Gamma$\big(\nu,1/(a\theta)\big)$ | 
-| Point mass at $\mu$ | $\mathrm{e}^{\mu t}$ | $\mathrm{e}^{a\mu t}$ | Point mass at $a\mu$ |
+| Point mass $\delta(\mu)$ | $\mathrm{e}^{\mu t}$ | $\mathrm{e}^{a\mu t}$ | Point mass $\delta(a\mu)$ |
 | Normal$(\mu, \sigma^2)$ | $\mathrm{e}^{\mu t + \sigma^2 t^2/2}$ | $\mathrm{e}^{a\mu t + a^2\sigma^2 t^2/2}$ | Normal$(a\mu, a^2\sigma^2)$ |
 
 ## Adding
 
 Adding independent random variables works well with MGFs.
+
+. . .
 
 If $X$ and $Y$ are independent,
 $$ \begin{multline*}
@@ -174,18 +192,17 @@ M_{X+Y}(t) = \mathbb E\,\mathrm{e}^{t(X+Y)} = \mathbb E\big(\mathrm{e}^{tX}\,\ma
 * Exponential$(1/\theta)$ + Exponential$(1/\theta)$ = Gamma$(2, 1/\theta)$
 $$ (1 - \theta t)^{-1}(1 - \theta t)^{-1} = (1 - \theta t)^{-2} $$
 
-::: {.incremental}
 * Gamma$(\nu_1, 1/\theta)$ + Gamma$(\nu_2, 1/\theta)$ = Gamma$(\nu_1 + \nu_2, 1/\theta)$
 $$ (1 - \theta t)^{-\nu_1}(1 - \theta t)^{-\nu_2} = (1 - \theta t)^{-(\nu_1+\nu_2)} $$
 
-* Point mass at $\mu_1$ + Point mass at $\mu_2$ = Point mass at $\mu_1 + \mu_2$
+* Point mass $\delta(\mu_1)$ + Point mass $\delta(\mu_2)$ = Point mass $\delta(\mu_1 + \mu_2)$$
 $$ \mathrm{e}^{\mu_1 t}\,\mathrm{e}^{\mu_2 t} = \mathrm{e}^{(\mu_1 + \mu_2) t}$$
 
 * Normal$(\mu_1, \sigma^2_1)$ + Normal$(\mu_2, \sigma^2_2)$ = Normal$(\mu_1 + \mu_2, \sigma^2_1 + \sigma_2^2)$
 $$ \mathrm{e}^{\mu_1 t + \sigma_1^2 t^2/2}\,\mathrm{e}^{\mu_2 t + \sigma_2^2 t^2/2} = \mathrm{e}^{(\mu_1 + \mu_2) t + (\sigma_1^2 + \sigma_2^2)t^2/2}$$
-:::
 
-## Law of large numbers  {auto-animate=true}
+
+## Law of large numbers
 
 **Theorem (Law of large numbers).** *Let $X_1, X_2, \dots$ be IID random variables with expectation $\mathbb EX_1 = \mu$. Write $Y_n$ for the scaled sum*
 
@@ -193,11 +210,11 @@ $$ Y_n = \frac{1}{n} \big(X_1 + X_2 + \cdots + X_n\big) . $$
 
 *Then*
 
-$$Y_n \to \mu \qquad \text{as $n \to \infty$} $$
+$$Y_n \to \phantom{\delta(}\mu\phantom{)} \qquad \text{as $n \to \infty$} $$
 
 *in probability.*
 
-## Law of large numbers (2)  {auto-animate=true}
+## Law of large numbers
 
 **Theorem (Law of large numbers).** *Let $X_1, X_2, \dots$ be IID random variables with expectation $\mathbb EX_1 = \mu$. Write $Y_n$ for the scaled sum*
 
@@ -216,7 +233,7 @@ $$ Y_n = \frac{1}{n} \big(X_1 + X_2 + \cdots + X_n\big)  $$
 . . .
 
 So the MGF of $Y_n$ is
-$$ M_{Y_n}(t) = M_X\left(\frac{t}{n}\right)^n $$
+$$ M_{Y_n}(t) = M_X\Big(\frac{t}{n}\Big)^n $$
 
 . . .
 
@@ -225,11 +242,11 @@ $$ M_X(t) = \sum_{k=0}^\infty \mathbb EX^k \, \frac{t^k}{k!} = 1 + \mu t + \cdot
 
 . . .
 
-$$ M_{Y_n}(t) = M_X\left(\frac{t}{n}\right)^n = \left(1 + \frac{\mu t}{n} + \cdots \right)^n \to \mathrm{e}^{\mu t}$$
+$$ M_{Y_n}(t) = M_X\Big(\frac{t}{n}\Big)^n = \left(1 + \frac{\mu t}{n} + \cdots \right)^n \to \mathrm{e}^{\mu t}$$
 
 . . .
 
-But $\mathrm{e}^{\mu t}$ is the MGF of a point mass at $\mu$. [&#9634;]{style="float: right"}
+But $\mathrm{e}^{\mu t}$ is the MGF of a point mass $\delta(\mu)$. [&#9634;]{style="float: right"}
 
 ## Part 1 conclusions
 
@@ -287,22 +304,35 @@ $$ \mathbb EX^2 = \sum_{x=0}^\infty x^2 (1-p)^xp $$
 * Poisson$(\mu)$:
 $$ \mathbb EX^2 = \sum_{x=0}^\infty x^2\,\mathrm{e}^{-\mu}\, \frac{\mu^x}{x!} $$
 
-## Calculating 2nd moments: alternative {.smaller}
+## Calculating 2nd moments: Geometric {.smaller}
 
-It's easier to calculate $\mathbb EX(X-1)$ then work out $\mathbb EX^2$
+It's easier to calculate $\mathbb EX(X-1)$ first, then work out $\mathbb EX^2 = \mathbb EX(X-1) + \mathbb EX$
 
 . . .
 
 * Geometric$(p)$:
-$$ \begin{align*}
-\mathbb EX(X-1) &= \sum_{x=0}^\infty x(x-1) (1-p)^x p \\
-&= p(1-p)^2 \sum_{x=0}^\infty x(x-1) (1-p)^{x-2}
-\end{align*} $$
 
-. . .
+\begin{align*}
+\mathbb EX(X-1) &= \sum_{x=0}^\infty x(x-1) (1-p)^x p \\
+&= p(1-p)^2 \sum_{x=0}^\infty x(x-1) (1-p)^{x-2} \\
+&= p(1-p)^2 \frac{\mathrm{d}^2}{\mathrm{d}p^2} \sum_{x=0}^\infty (1-p)^x \\
+&= p(1-p)^2\,\frac{2}{p^3} \\
+&= 2 \left(\frac{1-p}{p}\right)^2
+\end{align*}
+
+
+## Calculating 2nd moments: Poisson {.smaller}
+
+It's easier to calculate $\mathbb EX(X-1)$ first, then work out $\mathbb EX^2 = \mathbb EX(X-1) + \mathbb EX$
 
 * Poisson$(\mu)$:
-$$ \mathbb EX(X-1) = \sum_{x=0}^\infty x(x-1)\,\mathrm{e}^{-\mu}\, \frac{\mu^x}{x!} = \mathrm{e}^{-\mu}\,\mu^2 \sum_{x=0}^\infty \frac{\mu^{x-2}}{(x-2)!} $$
+
+\begin{align*}
+\mathbb EX(X-1) &= \sum_{x=0}^\infty x(x-1)\,\mathrm{e}^{-\mu}\, \frac{\mu^x}{x!} \\
+&= \mathrm{e}^{-\mu}\,\mu^2 \sum_{x=0}^\infty \frac{\mu^{x-2}}{(x-2)!} \\
+&= \mathrm{e}^{-\mu}\,\mu^2\, \mathrm{e}^{\mu} \\
+&= \mu^2
+\end{align*}
 
 ## Falling moments
 
@@ -338,6 +368,8 @@ $$ \mathbb E X^{\underline{k}} = \mathbb E X(X-1) \cdots (X-k+1) $$
 If the **moment generating function** (MGF)
 $$ M_X(t) = \sum_{k=0}^\infty \mathbb EX^k \, \frac{t^k}{k!}  $$
 generates the moments...
+
+. . .
 
 ...then a **falling moment generating function** (FMGF)
 $$ \Phi_X(t) = \sum_{k=0}^\infty \mathbb EX^{\underline k} \, \frac{t^k}{k!}  $$
@@ -577,7 +609,7 @@ $$ \Phi_{Y_n}(t) = \Phi_X\Big(\frac{t}{n}\Big)^n $$
 Let's approximate
 $$ \Phi_X(t) = \sum_{k=0}^\infty \mathbb EX^\underline{k} \, \frac{t^k}{k!} = 1 + \mu t + \cdots $$
 
-$$ \Phi_{Y_n}(t) = \Phi_X\left(\frac{t}{n}\right)^n = \left(1 + \frac{\mu t}{n} + \cdots \right)^n \to \mathrm{e}^{\mu t}$$
+$$ \Phi_{Y_n}(t) = \Phi_X\Big(\frac{t}{n}\Big)^n = \left(1 + \frac{\mu t}{n} + \cdots \right)^n \to \mathrm{e}^{\mu t}$$
 
 But $\mathrm{e}^{\mu t}$ is the FMGF of a Poisson($\mu$) distribution. [&#9634;]{style="float: right"}
 

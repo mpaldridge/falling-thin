@@ -339,19 +339,23 @@ Matthew Aldridge
 <section>
 <section id="introduction" class="title-slide slide level1 center">
 <h1>Introduction</h1>
+
+</section>
+<section id="section" class="slide level2" data-menu-title="A question">
+<h2></h2>
+<div class="r-fit-text">
+<p>When dealing with discrete<br>
+“counting” random variables…</p>
+<p>…what are some “authentically discrete”<br>
+operations we can perform…</p>
+<p>…and what “authentically discrete”<br>
+results can we get?</p>
+</div>
 <style>
 mjx-container[display="true"] {
    margin: .5em 0 ! important
 }
 </style>
-</section>
-<section id="section" class="slide level2" data-menu-title="A question">
-<h2></h2>
-<div class="r-fit-text">
-<p>When dealing with discrete “counting” random variables…</p>
-<p>…what are some “authentically discrete” operations we can perform…</p>
-<p>…and what “authentically discrete” results can we get?</p>
-</div>
 </section>
 <section id="section-1" class="slide level2" data-menu-title="A tweet">
 <h2></h2>
@@ -415,7 +419,11 @@ mjx-container[display="true"] {
 <h2>The moment problem</h2>
 <p><strong>“The moment problem”:</strong> <em>Given the moments <span class="math inline">\(\mathbb E X^k\)</span> of a random variable, can you recover its distribution?</em></p>
 <div class="fragment">
-<p><em>Answer:</em> Yes, if the distribution is nice enough.</p>
+<p><em>Answer:</em></p>
+<ul>
+<li>In general, <strong>No</strong> (infinite moments, or moments thar grow very large with <span class="math inline">\(k\)</span>)</li>
+<li>With “nice” random variables, <strong>Yes</strong></li>
+</ul>
 <p>(All our distributions are nice enough.)</p>
 </div>
 </section>
@@ -442,7 +450,7 @@ mjx-container[display="true"] {
 <td style="text-align: center;"><span class="math inline">\(\mathbb E X^k = \nu^{\overline{k}}\, \theta^k\)</span></td>
 </tr>
 <tr class="odd">
-<td style="text-align: center;">Point mass at <span class="math inline">\(\mu\)</span></td>
+<td style="text-align: center;">Point mass<span class="math inline">\(\delta(\mu)\)</span></td>
 <td style="text-align: center;"><span class="math inline">\(\mathbb E X^k = \mu^k\)</span></td>
 </tr>
 <tr class="even">
@@ -489,7 +497,7 @@ mjx-container[display="true"] {
 <td style="text-align: center;"><span class="math inline">\(M_X(t) = (1 - \theta t)^{-\nu}\)</span></td>
 </tr>
 <tr class="odd">
-<td style="text-align: center;">Point mass at <span class="math inline">\(\mu\)</span></td>
+<td style="text-align: center;">Point mass <span class="math inline">\(\delta(\mu)\)</span></td>
 <td style="text-align: center;"><span class="math inline">\(M_X(t) = \mathrm{e}^{\mu t}\)</span></td>
 </tr>
 <tr class="even">
@@ -498,6 +506,13 @@ mjx-container[display="true"] {
 </tr>
 </tbody>
 </table>
+</section>
+<section id="mgfs-and-limits" class="slide level2">
+<h2>MGFs and limits</h2>
+<p>MGFs work well with limits:</p>
+<p>If <span class="math inline">\(M_{X_n}(t) \to M_Y(t)\)</span></p>
+<p><span style="font-size:0.7em">(in a neighbourhood of <span class="math inline">\(t = 0\)</span>, with <span class="math inline">\(M_Y(t)\)</span> continuous at <span class="math inline">\(t = 0\)</span>)</span></p>
+<p>then <span class="math inline">\(X_n \to Y\)</span> in distribution.</p>
 </section>
 <section id="scaling" class="slide level2">
 <h2>Scaling</h2>
@@ -555,10 +570,10 @@ mjx-container[display="true"] {
 <td style="text-align: center;">Gamma<span class="math inline">\(\big(\nu,1/(a\theta)\big)\)</span></td>
 </tr>
 <tr class="odd">
-<td style="text-align: center;">Point mass at <span class="math inline">\(\mu\)</span></td>
+<td style="text-align: center;">Point mass <span class="math inline">\(\delta(\mu)\)</span></td>
 <td style="text-align: center;"><span class="math inline">\(\mathrm{e}^{\mu t}\)</span></td>
 <td style="text-align: center;"><span class="math inline">\(\mathrm{e}^{a\mu t}\)</span></td>
-<td style="text-align: center;">Point mass at <span class="math inline">\(a\mu\)</span></td>
+<td style="text-align: center;">Point mass <span class="math inline">\(\delta(a\mu)\)</span></td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">Normal<span class="math inline">\((\mu, \sigma^2)\)</span></td>
@@ -572,34 +587,32 @@ mjx-container[display="true"] {
 <section id="adding" class="slide level2">
 <h2>Adding</h2>
 <p>Adding independent random variables works well with MGFs.</p>
+<div class="fragment">
 <p>If <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> are independent, <span class="math display">\[ \begin{multline*}
 M_{X+Y}(t) = \mathbb E\,\mathrm{e}^{t(X+Y)} = \mathbb E\big(\mathrm{e}^{tX}\,\mathrm{e}^{tY}\big) \\
 =  \big(\mathbb E\,\mathrm{e}^{tX}\big)\big( \mathbb E\,\mathrm{e}^{tY}\big) = M_X(t)\,M_Y(t)
 \end{multline*}\]</span></p>
+</div>
 </section>
 <section id="adding-examples" class="slide level2 smaller">
 <h2>Adding: examples</h2>
 <ul>
-<li>Exponential<span class="math inline">\((1/\theta)\)</span> + Exponential<span class="math inline">\((1/\theta)\)</span> = Gamma<span class="math inline">\((2, 1/\theta)\)</span> <span class="math display">\[ (1 - \theta t)^{-1}(1 - \theta t)^{-1} = (1 - \theta t)^{-2} \]</span></li>
+<li><p>Exponential<span class="math inline">\((1/\theta)\)</span> + Exponential<span class="math inline">\((1/\theta)\)</span> = Gamma<span class="math inline">\((2, 1/\theta)\)</span> <span class="math display">\[ (1 - \theta t)^{-1}(1 - \theta t)^{-1} = (1 - \theta t)^{-2} \]</span></p></li>
+<li><p>Gamma<span class="math inline">\((\nu_1, 1/\theta)\)</span> + Gamma<span class="math inline">\((\nu_2, 1/\theta)\)</span> = Gamma<span class="math inline">\((\nu_1 + \nu_2, 1/\theta)\)</span> <span class="math display">\[ (1 - \theta t)^{-\nu_1}(1 - \theta t)^{-\nu_2} = (1 - \theta t)^{-(\nu_1+\nu_2)} \]</span></p></li>
+<li><p>Point mass <span class="math inline">\(\delta(\mu_1)\)</span> + Point mass <span class="math inline">\(\delta(\mu_2)\)</span> = Point mass <span class="math inline">\(\delta(\mu_1 + \mu_2)\)</span>$ <span class="math display">\[ \mathrm{e}^{\mu_1 t}\,\mathrm{e}^{\mu_2 t} = \mathrm{e}^{(\mu_1 + \mu_2) t}\]</span></p></li>
+<li><p>Normal<span class="math inline">\((\mu_1, \sigma^2_1)\)</span> + Normal<span class="math inline">\((\mu_2, \sigma^2_2)\)</span> = Normal<span class="math inline">\((\mu_1 + \mu_2, \sigma^2_1 + \sigma_2^2)\)</span> <span class="math display">\[ \mathrm{e}^{\mu_1 t + \sigma_1^2 t^2/2}\,\mathrm{e}^{\mu_2 t + \sigma_2^2 t^2/2} = \mathrm{e}^{(\mu_1 + \mu_2) t + (\sigma_1^2 + \sigma_2^2)t^2/2}\]</span></p></li>
 </ul>
-<div>
-<ul>
-<li class="fragment"><p>Gamma<span class="math inline">\((\nu_1, 1/\theta)\)</span> + Gamma<span class="math inline">\((\nu_2, 1/\theta)\)</span> = Gamma<span class="math inline">\((\nu_1 + \nu_2, 1/\theta)\)</span> <span class="math display">\[ (1 - \theta t)^{-\nu_1}(1 - \theta t)^{-\nu_2} = (1 - \theta t)^{-(\nu_1+\nu_2)} \]</span></p></li>
-<li class="fragment"><p>Point mass at <span class="math inline">\(\mu_1\)</span> + Point mass at <span class="math inline">\(\mu_2\)</span> = Point mass at <span class="math inline">\(\mu_1 + \mu_2\)</span> <span class="math display">\[ \mathrm{e}^{\mu_1 t}\,\mathrm{e}^{\mu_2 t} = \mathrm{e}^{(\mu_1 + \mu_2) t}\]</span></p></li>
-<li class="fragment"><p>Normal<span class="math inline">\((\mu_1, \sigma^2_1)\)</span> + Normal<span class="math inline">\((\mu_2, \sigma^2_2)\)</span> = Normal<span class="math inline">\((\mu_1 + \mu_2, \sigma^2_1 + \sigma_2^2)\)</span> <span class="math display">\[ \mathrm{e}^{\mu_1 t + \sigma_1^2 t^2/2}\,\mathrm{e}^{\mu_2 t + \sigma_2^2 t^2/2} = \mathrm{e}^{(\mu_1 + \mu_2) t + (\sigma_1^2 + \sigma_2^2)t^2/2}\]</span></p></li>
-</ul>
-</div>
 </section>
-<section id="law-of-large-numbers" class="slide level2" data-auto-animate="true">
-<h2 data-id="quarto-animate-title">Law of large numbers</h2>
+<section id="law-of-large-numbers" class="slide level2">
+<h2>Law of large numbers</h2>
 <p><strong>Theorem (Law of large numbers).</strong> <em>Let <span class="math inline">\(X_1, X_2, \dots\)</span> be IID random variables with expectation <span class="math inline">\(\mathbb EX_1 = \mu\)</span>. Write <span class="math inline">\(Y_n\)</span> for the scaled sum</em></p>
 <p><span class="math display">\[ Y_n = \frac{1}{n} \big(X_1 + X_2 + \cdots + X_n\big) . \]</span></p>
 <p><em>Then</em></p>
-<p><span class="math display">\[Y_n \to \mu \qquad \text{as $n \to \infty$} \]</span></p>
+<p><span class="math display">\[Y_n \to \phantom{\delta(}\mu\phantom{)} \qquad \text{as $n \to \infty$} \]</span></p>
 <p><em>in probability.</em></p>
 </section>
-<section id="law-of-large-numbers-2" class="slide level2" data-auto-animate="true">
-<h2 data-id="quarto-animate-title">Law of large numbers (2)</h2>
+<section id="law-of-large-numbers-1" class="slide level2">
+<h2>Law of large numbers</h2>
 <p><strong>Theorem (Law of large numbers).</strong> <em>Let <span class="math inline">\(X_1, X_2, \dots\)</span> be IID random variables with expectation <span class="math inline">\(\mathbb EX_1 = \mu\)</span>. Write <span class="math inline">\(Y_n\)</span> for the scaled sum</em></p>
 <p><span class="math display">\[ Y_n = \frac{1}{n} \big(X_1 + X_2 + \cdots + X_n\big) . \]</span></p>
 <p><em>Then</em></p>
@@ -610,16 +623,16 @@ M_{X+Y}(t) = \mathbb E\,\mathrm{e}^{t(X+Y)} = \mathbb E\big(\mathrm{e}^{tX}\,\ma
 <h2>Law of large numbers: Proof</h2>
 <p><span class="math display">\[ Y_n = \frac{1}{n} \big(X_1 + X_2 + \cdots + X_n\big)  \]</span></p>
 <div class="fragment">
-<p>So the MGF of <span class="math inline">\(Y_n\)</span> is <span class="math display">\[ M_{Y_n}(t) = M_X\left(\frac{t}{n}\right)^n \]</span></p>
+<p>So the MGF of <span class="math inline">\(Y_n\)</span> is <span class="math display">\[ M_{Y_n}(t) = M_X\Big(\frac{t}{n}\Big)^n \]</span></p>
 </div>
 <div class="fragment">
 <p>Let’s approximate <span class="math display">\[ M_X(t) = \sum_{k=0}^\infty \mathbb EX^k \, \frac{t^k}{k!} = 1 + \mu t + \cdots \]</span></p>
 </div>
 <div class="fragment">
-<p><span class="math display">\[ M_{Y_n}(t) = M_X\left(\frac{t}{n}\right)^n = \left(1 + \frac{\mu t}{n} + \cdots \right)^n \to \mathrm{e}^{\mu t}\]</span></p>
+<p><span class="math display">\[ M_{Y_n}(t) = M_X\Big(\frac{t}{n}\Big)^n = \left(1 + \frac{\mu t}{n} + \cdots \right)^n \to \mathrm{e}^{\mu t}\]</span></p>
 </div>
 <div class="fragment">
-<p>But <span class="math inline">\(\mathrm{e}^{\mu t}\)</span> is the MGF of a point mass at <span class="math inline">\(\mu\)</span>. <span style="float: right">▢</span></p>
+<p>But <span class="math inline">\(\mathrm{e}^{\mu t}\)</span> is the MGF of a point mass <span class="math inline">\(\delta(\mu)\)</span>. <span style="float: right">▢</span></p>
 </div>
 </section>
 <section id="part-1-conclusions" class="slide level2">
@@ -707,22 +720,34 @@ which is the MGF of the point mass <span class="math inline">\(\delta(\mu)\)</sp
 <li><p>Poisson<span class="math inline">\((\mu)\)</span>: <span class="math display">\[ \mathbb EX^2 = \sum_{x=0}^\infty x^2\,\mathrm{e}^{-\mu}\, \frac{\mu^x}{x!} \]</span></p></li>
 </ul>
 </section>
-<section id="calculating-2nd-moments-alternative" class="slide level2 smaller">
-<h2>Calculating 2nd moments: alternative</h2>
-<p>It’s easier to calculate <span class="math inline">\(\mathbb EX(X-1)\)</span> then work out <span class="math inline">\(\mathbb EX^2\)</span></p>
+<section id="calculating-2nd-moments-geometric" class="slide level2 smaller">
+<h2>Calculating 2nd moments: Geometric</h2>
+<p>It’s easier to calculate <span class="math inline">\(\mathbb EX(X-1)\)</span> first, then work out <span class="math inline">\(\mathbb EX^2 = \mathbb EX(X-1) + \mathbb EX\)</span></p>
 <div class="fragment">
 <ul>
-<li>Geometric<span class="math inline">\((p)\)</span>: <span class="math display">\[ \begin{align*}
+<li>Geometric<span class="math inline">\((p)\)</span>:</li>
+</ul>
+<p><span class="math display">\[\begin{align*}
 \mathbb EX(X-1) &amp;= \sum_{x=0}^\infty x(x-1) (1-p)^x p \\
-&amp;= p(1-p)^2 \sum_{x=0}^\infty x(x-1) (1-p)^{x-2}
-\end{align*} \]</span></li>
-</ul>
+&amp;= p(1-p)^2 \sum_{x=0}^\infty x(x-1) (1-p)^{x-2} \\
+&amp;= p(1-p)^2 \frac{\mathrm{d}^2}{\mathrm{d}p^2} \sum_{x=0}^\infty (1-p)^x \\
+&amp;= p(1-p)^2\,\frac{2}{p^3} \\
+&amp;= 2 \left(\frac{1-p}{p}\right)^2
+\end{align*}\]</span></p>
 </div>
-<div class="fragment">
+</section>
+<section id="calculating-2nd-moments-poisson" class="slide level2 smaller">
+<h2>Calculating 2nd moments: Poisson</h2>
+<p>It’s easier to calculate <span class="math inline">\(\mathbb EX(X-1)\)</span> first, then work out <span class="math inline">\(\mathbb EX^2 = \mathbb EX(X-1) + \mathbb EX\)</span></p>
 <ul>
-<li>Poisson<span class="math inline">\((\mu)\)</span>: <span class="math display">\[ \mathbb EX(X-1) = \sum_{x=0}^\infty x(x-1)\,\mathrm{e}^{-\mu}\, \frac{\mu^x}{x!} = \mathrm{e}^{-\mu}\,\mu^2 \sum_{x=0}^\infty \frac{\mu^{x-2}}{(x-2)!} \]</span></li>
+<li>Poisson<span class="math inline">\((\mu)\)</span>:</li>
 </ul>
-</div>
+<p><span class="math display">\[\begin{align*}
+\mathbb EX(X-1) &amp;= \sum_{x=0}^\infty x(x-1)\,\mathrm{e}^{-\mu}\, \frac{\mu^x}{x!} \\
+&amp;= \mathrm{e}^{-\mu}\,\mu^2 \sum_{x=0}^\infty \frac{\mu^{x-2}}{(x-2)!} \\
+&amp;= \mathrm{e}^{-\mu}\,\mu^2\, \mathrm{e}^{\mu} \\
+&amp;= \mu^2
+\end{align*}\]</span></p>
 </section>
 <section id="falling-moments" class="slide level2">
 <h2>Falling moments</h2>
@@ -810,7 +835,9 @@ which is the MGF of the point mass <span class="math inline">\(\delta(\mu)\)</sp
 <section id="fmgf" class="slide level2">
 <h2>FMGF</h2>
 <p>If the <strong>moment generating function</strong> (MGF) <span class="math display">\[ M_X(t) = \sum_{k=0}^\infty \mathbb EX^k \, \frac{t^k}{k!}  \]</span> generates the moments…</p>
+<div class="fragment">
 <p>…then a <strong>falling moment generating function</strong> (FMGF) <span class="math display">\[ \Phi_X(t) = \sum_{k=0}^\infty \mathbb EX^{\underline k} \, \frac{t^k}{k!}  \]</span> ought to generate the falling moments.</p>
+</div>
 </section>
 <section id="fmgf-alternative-expression" class="slide level2">
 <h2>FMGF (alternative expression)</h2>
@@ -1073,7 +1100,7 @@ which is the MGF of the point mass <span class="math inline">\(\delta(\mu)\)</sp
 <p><span class="math display">\[ Y_n = \frac{1}{n} \circ \big(X_1 + X_2 + \cdots + X_n\big)  \]</span></p>
 <p>So the FMGF of <span class="math inline">\(Y_n\)</span> is <span class="math display">\[ \Phi_{Y_n}(t) = \Phi_X\Big(\frac{t}{n}\Big)^n \]</span></p>
 <p>Let’s approximate <span class="math display">\[ \Phi_X(t) = \sum_{k=0}^\infty \mathbb EX^\underline{k} \, \frac{t^k}{k!} = 1 + \mu t + \cdots \]</span></p>
-<p><span class="math display">\[ \Phi_{Y_n}(t) = \Phi_X\left(\frac{t}{n}\right)^n = \left(1 + \frac{\mu t}{n} + \cdots \right)^n \to \mathrm{e}^{\mu t}\]</span></p>
+<p><span class="math display">\[ \Phi_{Y_n}(t) = \Phi_X\Big(\frac{t}{n}\Big)^n = \left(1 + \frac{\mu t}{n} + \cdots \right)^n \to \mathrm{e}^{\mu t}\]</span></p>
 <p>But <span class="math inline">\(\mathrm{e}^{\mu t}\)</span> is the FMGF of a Poisson(<span class="math inline">\(\mu\)</span>) distribution. <span style="float: right">▢</span></p>
 </section>
 <section id="conclusion-a-dictionary" class="slide level2">
