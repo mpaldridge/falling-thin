@@ -737,7 +737,7 @@ Benchmarks:
 
 * $\operatorname{Disp}(X+Y) = \operatorname{Disp}(X) + \operatorname{Disp}(Y)$  
   for independent $X, Y$
-* $\operatorname{Disp}(a\circ X) = a^2\,\operatorname{Var}(X)$
+* $\operatorname{Disp}(a\circ X) = a^2\,\operatorname{Disp}(X)$
 
 
 ## Dispersion: Examples
@@ -964,8 +964,8 @@ Given $X$ with FMGF $\Phi_X(t)$, define the **reflection** $X^*$ to be the rando
 ## Reflection: Questions
 
 * **Question.** *What are some properties of the reflection?*
-  * $\mathbb EX^* = \mathbb EX$
-  * $\operatorname{Disp}(X^*) = - \operatorname{Disp}(X)$
+  * $\mathbb EX^* = \mathbb EX$ and $\operatorname{Disp}(X^*) = - \operatorname{Disp}(X)$
+  * Is it true that if $H(X) \leq H(Y)$ then $H(X^*) \geq H(Y^*)$?
 * **Question.** *What conditions on $X$ guarantee the existence of the reflection $X^*$?*
 * **Question.** *Is this reflection operator a useful concept? Is it already well known?*
 
