@@ -41,11 +41,13 @@ mjx-container[display="true"] {
    * Falling moments, FMGFs, thinning
    * "Law of thin numbers"
 3. What about the central limit theorem?
+4. What about other things?
 
 ## Warning
 
 * This is not a proper research
-* I don't claim anything here is novel (see, eg, Jørgensen & Kokonendji, 2016)
+* I don't claim anything here is novel
+  * (see, eg, Jørgensen & Kokonendji, 2016)
 * I'll try not to go beyond second-year undergraduate probability
 
 ::: aside
@@ -71,8 +73,10 @@ For a random variable $X$ the **$k$th moment** $\mathbb E X^k$ is the expectatio
 . . .
 
 * 0th moment $\mathbb EX^0 = 1$
-* 1st moment $\mathbb EX^1 = \mathbb EX$: expectation (or "mean")
-* 2nd moment $\mathbb EX^2 = \operatorname{Var}(X) + (\mathbb EX)^2$: related to the variance
+* 1st moment $\mathbb EX^1 = \mathbb EX$
+  * expectation (or "mean")
+* 2nd moment $\mathbb EX^2 = \operatorname{Var}(X) + (\mathbb EX)^2$
+  * related to the variance
 
 ## The moment problem
 
@@ -82,8 +86,9 @@ For a random variable $X$ the **$k$th moment** $\mathbb E X^k$ is the expectatio
 
 *Answer:*
 
-* In general, **No** (infinite moments, or moments thar grow very large with $k$)
-* With "nice" random variables, **Yes**
+* In general, **No**
+  * (infinite moments; moments that grow very large with $k$)
+* For "nice" random variables, **Yes**
 
 (All our distributions are nice enough.)
 
@@ -93,7 +98,7 @@ For a random variable $X$ the **$k$th moment** $\mathbb E X^k$ is the expectatio
 |:-:|:-:|
 | Exponential$(1/\theta)$ | $\mathbb E X^k = k!\, \theta^k$ |
 | Gamma$(\nu,1/\theta)$ | $\mathbb E X^k = \nu^{\overline{k}}\, \theta^k$ | 
-| Point mass$\delta(\mu)$ | $\mathbb E X^k = \mu^k$ |
+| Point mass $\delta(\mu)$ | $\mathbb E X^k = \mu^k$ |
 | &nbsp; <br /> Normal$(\mu, \sigma^2)$ | $\mathbb EX^0 = 1$ <br /> $\mathbb EX^1 = \mu$<br /> $\mathbb EX^{k+1} = \mu \, \mathbb EX^k + k\sigma^2 \,\mathbb EX^{k-1}$ |
 
 ## MGF
@@ -125,24 +130,42 @@ $$ \mathbb EX^k = \left. \frac{\mathrm{d}^k}{\mathrm{d}t^k} M_X \right|_{t=0} = 
 | Point mass $\delta(\mu)$ | $M_X(t) = \mathrm{e}^{\mu t}$ |
 | Normal$(\mu, \sigma^2)$ | $M_X(t) = \mathrm{e}^{\mu t + \sigma^2 t^2/2}$ |
 
-## MGFs and limits
+## Adding
 
-MGFs work well with limits:
+Adding independent random variables works well with MGFs.
 
-If $M_{X_n}(t) \to M_Y(t)$
+. . .
 
-[(in a neighbourhood of $t = 0$, with $M_Y(t)$ continuous at $t = 0$)]{style="font-size:0.7em"}
+If $X$ and $Y$ are independent,
+$$ \begin{multline*}
+M_{X+Y}(t) = \mathbb E\,\mathrm{e}^{t(X+Y)} = \mathbb E\big(\mathrm{e}^{tX}\,\mathrm{e}^{tY}\big) \\
+=  \big(\mathbb E\,\mathrm{e}^{tX}\big)\big( \mathbb E\,\mathrm{e}^{tY}\big) = M_X(t)\,M_Y(t)
+\end{multline*}$$
 
-then $X_n \to Y$ in distribution.
+## Adding: examples {.smaller}
+
+* Exponential$(1/\theta)$ + Exponential$(1/\theta)$ = Gamma$(2, 1/\theta)$
+$$ (1 - \theta t)^{-1}(1 - \theta t)^{-1} = (1 - \theta t)^{-2} $$
+
+* Gamma$(\nu_1, 1/\theta)$ + Gamma$(\nu_2, 1/\theta)$ = Gamma$(\nu_1 + \nu_2, 1/\theta)$
+$$ (1 - \theta t)^{-\nu_1}(1 - \theta t)^{-\nu_2} = (1 - \theta t)^{-(\nu_1+\nu_2)} $$
+
+* Point mass $\delta(\mu_1)$ + Point mass $\delta(\mu_2)$ = Point mass $\delta(\mu_1 + \mu_2)$
+$$ \mathrm{e}^{\mu_1 t}\,\mathrm{e}^{\mu_2 t} = \mathrm{e}^{(\mu_1 + \mu_2) t}$$
+
+* Normal$(\mu_1, \sigma^2_1)$ + Normal$(\mu_2, \sigma^2_2)$ = Normal$(\mu_1 + \mu_2, \sigma^2_1 + \sigma_2^2)$
+$$ \mathrm{e}^{\mu_1 t + \sigma_1^2 t^2/2}\,\mathrm{e}^{\mu_2 t + \sigma_2^2 t^2/2} = \mathrm{e}^{(\mu_1 + \mu_2) t + (\sigma_1^2 + \sigma_2^2)t^2/2}$$
 
 ## Scaling
 
 **Scaling** means multiplying the random variable $X$ by a constant $a \in \mathbb R$ to get $aX$.
 
-. . .
+## Properties of scaling
 
-Scaling works well with moments:
-$$ \mathbb E(aX)^k = a^k \, \mathbb EX^k $$
+* $\mathbb E(aX) = a\,\mathbb EX$
+* $\mathbb E(aX)^k = a^k \, \mathbb EX^k$
+* $a_2(a_1X) = (a_2a_1)X$
+* $a(X + Y) = aX + aY$
 
 <!--
 ## Scaled moments: examples {.smaller}
@@ -166,7 +189,6 @@ $$ M_{aX}(t) = \mathbb E\, \mathrm{e}^{t(aX)} = \mathbb E\, \mathrm{e}^{(at)X} =
 
 ## Scaled MGFs: examples {.smaller}
 
-&nbsp;
 
 | Distribution | MGF | Scaled MGF | Scaled distribution |
 |:--:|:-:|:-:|:--:|
@@ -175,55 +197,32 @@ $$ M_{aX}(t) = \mathbb E\, \mathrm{e}^{t(aX)} = \mathbb E\, \mathrm{e}^{(at)X} =
 | Point mass $\delta(\mu)$ | $\mathrm{e}^{\mu t}$ | $\mathrm{e}^{a\mu t}$ | Point mass $\delta(a\mu)$ |
 | Normal$(\mu, \sigma^2)$ | $\mathrm{e}^{\mu t + \sigma^2 t^2/2}$ | $\mathrm{e}^{a\mu t + a^2\sigma^2 t^2/2}$ | Normal$(a\mu, a^2\sigma^2)$ |
 
-## Adding
 
-Adding independent random variables works well with MGFs.
+## MGFs and limits
 
-. . .
+MGFs work well with limits:
 
-If $X$ and $Y$ are independent,
-$$ \begin{multline*}
-M_{X+Y}(t) = \mathbb E\,\mathrm{e}^{t(X+Y)} = \mathbb E\big(\mathrm{e}^{tX}\,\mathrm{e}^{tY}\big) \\
-=  \big(\mathbb E\,\mathrm{e}^{tX}\big)\big( \mathbb E\,\mathrm{e}^{tY}\big) = M_X(t)\,M_Y(t)
-\end{multline*}$$
+If $M_{X_n}(t) \to M_Y(t)$
 
-## Adding: examples {.smaller}
+[(in a neighbourhood of $t = 0$, with $M_Y(t)$ continuous at $t = 0$)]{style="font-size:0.7em"}
 
-* Exponential$(1/\theta)$ + Exponential$(1/\theta)$ = Gamma$(2, 1/\theta)$
-$$ (1 - \theta t)^{-1}(1 - \theta t)^{-1} = (1 - \theta t)^{-2} $$
-
-* Gamma$(\nu_1, 1/\theta)$ + Gamma$(\nu_2, 1/\theta)$ = Gamma$(\nu_1 + \nu_2, 1/\theta)$
-$$ (1 - \theta t)^{-\nu_1}(1 - \theta t)^{-\nu_2} = (1 - \theta t)^{-(\nu_1+\nu_2)} $$
-
-* Point mass $\delta(\mu_1)$ + Point mass $\delta(\mu_2)$ = Point mass $\delta(\mu_1 + \mu_2)$$
-$$ \mathrm{e}^{\mu_1 t}\,\mathrm{e}^{\mu_2 t} = \mathrm{e}^{(\mu_1 + \mu_2) t}$$
-
-* Normal$(\mu_1, \sigma^2_1)$ + Normal$(\mu_2, \sigma^2_2)$ = Normal$(\mu_1 + \mu_2, \sigma^2_1 + \sigma_2^2)$
-$$ \mathrm{e}^{\mu_1 t + \sigma_1^2 t^2/2}\,\mathrm{e}^{\mu_2 t + \sigma_2^2 t^2/2} = \mathrm{e}^{(\mu_1 + \mu_2) t + (\sigma_1^2 + \sigma_2^2)t^2/2}$$
+then $X_n \to Y$ in distribution.
 
 
 ## Law of large numbers
 
 **Theorem (Law of large numbers).** *Let $X_1, X_2, \dots$ be IID random variables with expectation $\mathbb EX_1 = \mu$. Write $Y_n$ for the scaled sum*
-
 $$ Y_n = \frac{1}{n} \big(X_1 + X_2 + \cdots + X_n\big) . $$
-
 *Then*
-
 $$Y_n \to \phantom{\delta(}\mu\phantom{)} \qquad \text{as $n \to \infty$} $$
-
 *in probability.*
 
 ## Law of large numbers
 
 **Theorem (Law of large numbers).** *Let $X_1, X_2, \dots$ be IID random variables with expectation $\mathbb EX_1 = \mu$. Write $Y_n$ for the scaled sum*
-
 $$ Y_n = \frac{1}{n} \big(X_1 + X_2 + \cdots + X_n\big) . $$
-
 *Then*
-
 $$Y_n \to \delta(\mu) \qquad \text{as $n \to \infty$} $$
-
 *in* *distribution.*
 
 ## Law of large numbers: Proof {.smaller}
@@ -498,6 +497,7 @@ Equivalently, $a\circ X$ is a random sum
 $$ a \circ X = \sum_{i=1}^X B_i , $$
 where the $B_i$ are IID Bernoulli$(a)$.
 
+<!--
 ## Thinning examples (1)
 
 Clearly:
@@ -505,7 +505,7 @@ Clearly:
 * $a \circ \text{Bern}(\theta) = \text{Bern}(a\theta)$
 * $a \circ \text{Bin}(n, \theta) = \text{Bin}(n, a\theta)$
 
-What about geometric, negative binomial, Poisson, ...?
+What about geometric, negative binomial, Poisson, ...-->
 
 ## Thinning and FMGFs
 
@@ -516,18 +516,23 @@ What about geometric, negative binomial, Poisson, ...?
 *the MGF of the $a$-scaling*  
 $aX$ *is* $M_{aX}(t) = M(at)$.
 
+<!--
 *In particular, the*  
 *moments are*  
 $\mathbb E(aX)^k = a^k \,\mathbb EX^k$.
+-->
 :::
 
-::: {.column width="49%"}
+:::: {.column width="49%"}
+::: {.fragment}
 **Theorem.** *Let $X$ be a discrete random variable with FMGF $\Phi_X$, and let $a \in [0,1]$. Then the FMGF of the $a$-thinning $a \circ X$ is \, $\Phi_{a\circ X}(t) = \Phi(at)$.*
-
+:::
+<!--
 *In particular, the*  
 *falling moments are*  
 $\mathbb E(a\circ X)^{\underline k} = a^k \, \mathbb EX^{\underline k}$.
-:::
+-->
+::::
 
 ## Thinning and FMGFs: proof
 
@@ -543,7 +548,7 @@ $\mathbb E(a\circ X)^{\underline k} = a^k \, \mathbb EX^{\underline k}$.
 
 [&#9634;]{style="float: right"}
 
-## Thinning examples (2)
+## Thinning examples
 
 * $a \circ \text{Bern}(\theta) = \text{Bern}(a\theta)$
 * $a \circ \text{Bin}(n, \theta) = \text{Bin}(n, a\theta)$
@@ -553,6 +558,24 @@ $\mathbb E(a\circ X)^{\underline k} = a^k \, \mathbb EX^{\underline k}$.
   * $\big(1 - \theta(at)\big)^{-n} = \big(1 - (a\theta)t\big)^{-n}$
 * $a \circ \operatorname{Po}(\mu) = \operatorname{Po}(a\mu)$
   * $\mathrm{e}^{\mu(at)} = \mathrm{e}^{(a\mu)at}$
+  
+## Thinning: Properties
+
+::: {.column width="49%"}
+* $\mathbb E(aX) = a\,\mathbb EX$
+* $\mathbb E(aX)^k = a^k \, \mathbb EX^k$
+* $a_2(a_1X) = (a_2a_1)X$
+* $a(X + Y) = aX + aY$
+* Exists for any $a \in \mathbb R$
+:::
+
+::: {.column width="49%"}
+* $\mathbb E(a\circ X) = a\,\mathbb EX$
+* $\mathbb E(a\circ X)^{\underline{k}} = a^k \, \mathbb EX^{\underline{k}}$
+* $a_2\circ (a_1 \circ X) = (a_2a_1)\circ X$
+* $a\circ (X + Y) = a\circ X + a\circ Y$
+* Exists only for $0 \leq a \leq 1$
+:::
 
 ## Reminder: Law of large numbers
 
@@ -591,7 +614,7 @@ $$ Y_n = \tfrac{1}{n} (X_1 + \cdots + X_n) . $$
 
 ::: {.column width="49%"}
 **Theorem (Law of thin numbers).** *Let* $X_1, X_2, \dots$  
-*be IID discrete counting random variables*  
+*be IID discrete count random variables*  
 *with expectation $\mathbb EX_1 = \mu$.*  
 *Write $Y_n$ for the thinned sum*
 $$ Y_n = \tfrac{1}{n} \circ (X_1 + \cdots + X_n) . $$
@@ -624,13 +647,15 @@ But $\mathrm{e}^{\mu t}$ is the FMGF of a Poisson($\mu$) distribution. [&#9634;]
 | Point mass | Poisson distribution |
 | Law of large numbers | Law of thin numbers |
 
-# What about the central limit theorem?
+# 3. What about the central limit theorem?
 
 ## Central limit theorem
 
-**Theorem (Central limit theorem).** *Let $X_1, X_2, \dots$ be IID random variables with expectation $\mathbb EX_1 = \mu$ and variance $\sigma^2$. Write $Y_n$ for the scaled and shifted sum*
-$$ Y_n = \frac{1}{\sqrt{n}} \big((X_1 + \cdots + X_n) - n\mu\big) . $$
-*Then $Y_n \to \operatorname{N}(0, \sigma^2)$ in distribution as $n \to \infty$.*
+**Theorem (Central limit theorem).** *Let $X_1, X_2, \dots$ be IID random variables with expectation $\mathbb EX_1 = \mu$ and variance $\sigma^2$. Write $Z_n$ for the scaled and shifted sum*
+$$ Z_n = \frac{1}{\sqrt{n}} \big((X_1 + \cdots + X_n) - n\mu\big) . $$
+*Then $Z_n \to \operatorname{N}(0, \sigma^2)$ in distribution as $n \to \infty$.*
+
+What is the discrete equivalent of this?
 
 ## Ingredients of CLT
 
@@ -688,7 +713,7 @@ $$ \frac{1}{\sqrt{n}} \big((X_1 + \cdots + X_n) - n\mu\big) \to \operatorname{N}
 
 **Variance:** $\operatorname{Var}(X) = \mathbb EX^2 - (\mathbb EX)^2$
 
-**Dispersion:** $\operatorname{Disp}(X) = \mathbb EX^{\underline{2}} - \mathbb EX^2$.
+**Dispersion:** $\operatorname{Disp}(X) = \mathbb EX^{\underline{2}} - \mathbb EX^2 =\operatorname{Var}(X) - \mu$.
 
 . . .
 
@@ -702,8 +727,20 @@ Benchmarks:
 * $\operatorname{Var}\big(\delta(\mu)\big) = 0$, smallest possible
 * $\operatorname{Disp}\big(\operatorname{Po}(\mu)\big) = 0$, *not* smallest possible
 
+## Dispersion: properties
 
-## Variance and dispersion: Examples
+* $\operatorname{Var}(X+Y) = \operatorname{Var}(X) + \operatorname{Var}(Y)$  
+  for independent $X, Y$
+* $\operatorname{Var}(aX) = a^2\,\operatorname{Var}(X)$
+
+&nbsp;
+
+* $\operatorname{Disp}(X+Y) = \operatorname{Disp}(X) + \operatorname{Disp}(Y)$  
+  for independent $X, Y$
+* $\operatorname{Disp}(a\circ X) = a^2\,\operatorname{Var}(X)$
+
+
+## Dispersion: Examples
 
 | Distribution | Var/Disp | Distribution |
 |:-:|:-:|:-:|
@@ -773,9 +810,9 @@ $Y = X \ominus b$ should be "the distribution $Y$ such that $Y \oplus b = X$".
 * Bernoulli$(\theta) \ominus b$ does not exist for any $b > 0$.
 * Binomial$(n, \theta) \ominus b$ does not exist for any $b > 0$.
 
-**Question.** What conditions on $X$ and $b > 0$ guarantee the existence of $X \ominus b$?
+**Question.** *What conditions on $X$ and $b > 0$ guarantee the existence of $X \ominus b$?*
 
-**Question.** For what $n$, $\theta$, $b>0$ (if any) does $\operatorname{Geom}\big(\frac{1}{1+\theta}\big)\ominus b$ or $\operatorname{NegBin}\big(n, \frac{1}{1+\theta}\big)\ominus b$ exist?
+**Question.** *For what $n$, $\theta$, $b>0$ (if any) does $\operatorname{Geom}\big(\frac{1}{1+\theta}\big)\ominus b$ or $\operatorname{NegBin}\big(n, \frac{1}{1+\theta}\big)\ominus b$ exist?*
 
 ## Stock-take (2)
 
@@ -794,8 +831,8 @@ $Y = X \ominus b$ should be "the distribution $Y$ such that $Y \oplus b = X$".
 The **Hermite distribution** of Kemp & Kemp (1965):
 
 * Parameters $\mu$ and $s$, where $\mu \geq s \geq 0$.
-* Let $Y \sim \operatorname{Po}(\mu - s)$ and $Z \sim \operatorname{Po}\big(\frac s2\big)$
-* The $X = Y + 2Z$ has the **Hermite distribution** $\operatorname{Herm}(\mu, s)$.
+* Let $U \sim \operatorname{Po}(\mu - s)$ and $V \sim \operatorname{Po}\big(\frac s2\big)$
+* The $X = U + 2V$ has the **Hermite distribution** $\operatorname{Herm}(\mu, s)$.
 
 ::: aside
 CD Kemp & AW Kemp, ["Some properties of the 'Hermite' distribution"](https://doi.org/10.1093/biomet/52.3-4.381), *Biometrika*, 1965
@@ -805,16 +842,16 @@ CD Kemp & AW Kemp, ["Some properties of the 'Hermite' distribution"](https://doi
 
 $$\operatorname{Herm}(\mu, s) = \operatorname{Po}(\mu - s) + 2\,\operatorname{Po}\big(\tfrac s2\big)$$
 
-| Normal$(\mu, \sigma^2)$ | Herm$(\mu, s)$ |
+| Normal$(\mu, \sigma^2)$ | Hermite$(\mu, s)$ |
 |:-:|:-:|
 | Continuous | Discrete |
 | $\mathbb EX = \mu$ | $\mathbb EX = \mu$ |
 | $\operatorname{Var}(X) = \sigma^2$ | $\operatorname{Disp}(X) = s$ |
 | $\operatorname{N}(\mu, 0) = \delta(\mu)$ | $\operatorname{Herm}(\mu, 0) = \operatorname{Po}(\mu)$ |
-| $aX \sim \operatorname{N}(a\mu, a^2\sigma^2)$ | $a \circ X \sim \operatorname{Herm}(a\mu, a^2\sigma^2)$ |
-| $X + b \sim \operatorname{N}(\mu + b, \sigma^2)$ | $X \oplus b \sim \operatorname{Herm}(\mu+b,\sigma^2)$ |
-| $X + Y \sim \operatorname{N}(\mu_X + \mu_Y, \sigma^2_X + \sigma^2_Y)$ | $X + Y \sim \operatorname{Herm}(\mu_X + \mu_Y, \sigma^2_X + \sigma^2_Y)$ |
-| $M_X(t) = \exp\big(\mu t + \tfrac12 \sigma^2 t^2 \big)$ | $\Phi_X(t) = \exp\big(\mu t + \tfrac12 \sigma^2 t^2 \big)$ |
+| $aX \sim \operatorname{N}(a\mu, a^2\sigma^2)$ | $a \circ X \sim \operatorname{Herm}(a\mu, a^2s)$ |
+| $X + b \sim \operatorname{N}(\mu + b, \sigma^2)$ | $X \oplus b \sim \operatorname{Herm}(\mu+b,s)$ |
+| $X + Y \sim \operatorname{N}(\mu_X + \mu_Y, \sigma^2_X + \sigma^2_Y)$ | $X + Y \sim \operatorname{Herm}(\mu_X + \mu_Y, s_X + s_Y)$ |
+| $M_X(t) = \exp\big(\mu t + \tfrac12 \sigma^2 t^2 \big)$ | $\Phi_X(t) = \exp\big(\mu t + \tfrac12 s t^2 \big)$ |
 | Exists for all $\sigma^2 \geq 0$ | Does not exist for $-\mu\leq s< 0$ or $s > \mu$. |
 
 ## Stock-take (3)
@@ -827,4 +864,123 @@ $$\operatorname{Herm}(\mu, s) = \operatorname{Po}(\mu - s) + 2\,\operatorname{Po
 | Shifting $X + b$ | Poisson shifting?? |
 | Scaling $aX$ | Thinning $a \circ X$ |
 | Normal distribution | Hermite distribution? |
+| Central limit theorem | ??? |
+
+## Central limit theorem
+
+We'd like to replace the CLT's
+$$ Z_n = \frac{1}{\sqrt{n}} \big( (X_1 + \cdots + X_n) - \mu n \big) \to \operatorname{N}(0, \sigma^2)$$
+by the discrete equivalent (for $\operatorname{Disp}(X) = s \geq 0$)
+$$ Z_n = \frac{1}{\sqrt{n}} \circ \big( (X_1 + \cdots + X_n) \ominus \mu n\big) \to \operatorname{Herm}(0, s)$$
+
+. . .
+
+...but this $Z_n$ doesn't exist.
+
+(Except for $X_i \sim \operatorname{Po}(\mu)$, when $Z_n = \delta(0)$.)
+
+## Central limit shifted
+
+Jørgensen & Kokonendji (2016) suggest a shifted CLT
+$$ Z_n = \frac{1}{\sqrt{n}} \big( (X_1 + \cdots + X_n) - (\mu n - c\sqrt{n} )\big) \to \operatorname{N}(c, \sigma^2)$$
+with discrete equivalent
+$$ Z_n = \frac{1}{\sqrt{n}} \circ \big( (X_1 + \cdots + X_n) \ominus (\mu n - c\sqrt{n}) \big) \to \operatorname{Herm}(c, s)$$
+where $c > s \geq 0$ ensures the Hermite distribution on the right exists...
+
+. . .
+
+...but doesn't ensure the $Z_n$ on the left exists.
+
+## Discrete CLT: Questions
+
+$$ Z_n = \frac{1}{\sqrt{n}} \circ \big( (X_1 + \cdots + X_n) \ominus (\mu n - c\sqrt{n}) \big) \to \operatorname{Herm}(c, s)$$
+
+* **Question.** *What conditions on $X$ guarantee the existence of $Z_n$?*
+* **Question.** *Can we make sense of this limit even if $Z_n$ does not itself exist?*
+* **Question.** *Are there other ways we can understand*  
+  *"$Y_n \approx \operatorname{Herm}(\mu, s/n)$"?*
+* **Question.** *What about $X$s with negative dispersion?*
+
+  
+## Discrete CLT: Conclusions
+
+* **Dispersion** is an interesting alternative to the variance
+* The **Hermite distribution** is a good candidate for a "discrete normal"
+* "Negative **Poisson shifts**" need more investigation
+* It's not yet clear (to me) what the correct "**discrete central limit theorem**" is
+
+# 4. Various other questions...
+
+## Size biasing
+
+The **size-biased** version of a count random variable $X$ is $X^\sharp$, where
+$$ \mathbb P(X^\sharp = x - 1) = \frac{1}{\mu}\, x\, \mathbb P(X = x) \qquad x \geq 1$$
+
+**Question.** *Is it interesting to look at size-biasing through the lens of the FMGF?*
+
+## Entropy
+
+* **Question.** *Is the some condition under which the Hermite distribution is maximum entropy?*
+
+* **Question.** *Are there ways in which inequalities on FMGFs can transfer to inequalities on entropy?*
+  * Eg, is it true that is $\Phi_X(t) \leq \mathrm{e}^{\mu t}$  
+    then $H(X) \leq H(\operatorname{Po}(\mu))$?
+
+* **Question.** *What is the discrete equivalent of the "entropy power inequality"?*
+
+## Stochastic orderings
+
+* **Question.** *Are there ways in which certain orderings on random variables are revealed through the FMGF?*
+
+* **Question.** *Is it true that if the FMGF $\Phi_X(t)$ is log-concave then $X \preceq \operatorname{Po}(\mu)$ in the convex ordering?*
+
+* **Question.** *Does this give any insight into when the Poisson shift $X \ominus b$ exists?*
+
+## Reflection
+
+| Distribution | FMGF |
+|:-:|:-:|
+| Bernoulli$(\theta)$ | $\Phi_X(t) = 1 + \theta t$ |
+| Binomial$(n, \theta)$ | $\Phi_X(t) = (1 + \theta t)^n$ |
+| Geometric$(\frac{1}{1+\theta})$ | $\Phi_X(t) = (1 - \theta t)^{-1}$ |
+| NegBin$(n,\frac{1}{1+\theta})$ | $\Phi_X(t) = (1 - \theta t)^{-n}$ |
+| Poisson$(\mu)$ | $\Phi_X(t) = \mathrm{e}^{\mu t}$ |
+
+## Reflection: Definition
+
+Given $X$ with FMGF $\Phi_X(t)$, define the **reflection** $X^*$ to be the random variable with FMGF $\Phi_{X^*}(t) =\Phi_X(-t)^{-1}$, if it exists.
+
+## Reflection: Examples
+
+* $\operatorname{Bern}(\theta)^* = \operatorname{Geom}\big(\frac{1}{1+\theta}\big)$
+* $\operatorname{Bin}(n, \theta)^* = \operatorname{NegBin}\big(n, \frac{1}{1+\theta}\big)$
+* $\operatorname{Geom}\big(\frac{1}{1+\theta}\big)^* = \operatorname{Bern}(\theta)$ for $\theta \leq 1$,  
+  but doesn't exist for $\theta > 1$
+* $\operatorname{NegBin}\big(n, \frac{1}{1+\theta}\big)^* = \operatorname{Bin}(n,\theta)$ for $\theta \leq 1$,  
+  but doesn't exist for $\theta > 1$
+* $\operatorname{Po}(\mu)^* = \operatorname{Po}(\mu)$
+* $\operatorname{Herm}(\mu, s)^*$ doesn't exist (except for $s = 0$)
+
+## Reflection: Questions
+
+* **Question.** *What are some properties of the reflection?*
+  * $\mathbb EX^* = \mathbb EX$
+  * $\operatorname{Disp}(X^*) = - \operatorname{Disp}(X)$
+* **Question.** *What conditions on $X$ guarantee the existence of the reflection $X^*$?*
+* **Question.** *Is this reflection operator a useful concept? Is it already well known?*
+
+# Conclusion
+
+---
+
+| General RVs | Counting RVs |
+|:-:|:-:|
+| Moments | Falling moments |
+| MGF | FMGF |
+| Variance | Dispersion |
+| Point mass | Poisson distribution |
+| Adding independent RVs | Adding independent RVs |
+| Scaling | Thinning |
+| Shifting | Poisson shifting |
+| Law of large numbers | Law of thin numbers |
 | Central limit theorem | ??? |
