@@ -13,9 +13,9 @@ Many of us ask students to submit work to Gradescope that students will write by
 **Advantages of the Gradescope app:**
 
 * Students can scan and submit within the same app -- no more transferring documents between apps, or from phone to laptop.
-* High-quality, auto-cropped, low-filesize PDFs -- no more difficult-to-read scans or submission of multiple photograph image files.
-* Submission takes around 90 seconds.
-* The app can send students automated reminders of deadlines.
+* High-quality, auto-cropped, low-filesize PDFs -- no more difficult-to-read scans or submission of multiple photographic image files.
+* Submission takes about 1 minute.
+* The app can send students automated reminders of upcoming deadlines.
 
 **Disadvantages of the Gradescope app:**
 
@@ -27,17 +27,17 @@ Many of us ask students to submit work to Gradescope that students will write by
 
 ### Logging on to the Gradescope app
 
-The Gradescope app can be downloaded from the iOS or Android app stores. On iOS, the full name of the app "Gradescope – Assessment Anywhere" and it has a blue barchart icon.
+The Gradescope app can be downloaded from the iOS or Android app stores. The name of the app is simply "Gradescope", and it has a blue barchart icon.
  
-Logging onto the app is a little bit of a hassle. On first use of the app, you will have to go through the following steps:
+Logging on to the app is a little bit of a hassle. On first use of the app, you will have to go through the following steps:
 
-1. Choose "University of Leeds" in answer to "Which school do you attend"
+1. Choose "University of Leeds" in answer to "Which school do you attend?"
 2. Choose to log in via "School Credentials"
 3. Search (or scroll down a long list) to find "University of Leeds" again.
-4. Enter their username and password
+4. Enter your University username and password.
 5. Get through Duo Authentication in the usual way.
 
-On subsequent log-ins after the first time, "University of Leeds" will be pre-selected on the first step, and it shouldn't necessary to repeat the fourth and fifth steps.
+On subsequent log-ins after the first time, "University of Leeds" will be pre-selected on the first step, and it shouldn't necessary to repeat the fourth and fifth steps. (But it is a little bit annoying you have to choose "University of Leeds" twice for some reason.)
  
 ### Submitting work
 
@@ -49,7 +49,7 @@ Once logged into the Gradescope app, you can submit work for an assignment.
 4. Photograph the first page of your work. The app should automatically crop your work, and colour-balance the image for prime readability, but you can adjust these on the rare occasion it goes wrong. Click "Next".
 5. Repeat step 4 until all pages of your work have been scanned. Then click "Done".
 6. Review your submission, and click "Submit".
-7. You now need to "assign" (or "tag") your pages. Click "Asign pages".
+7. You now need to "assign" (or "tag") your pages. Click "Assign pages".
 8. For each page of your work, click which questions are answered on that page. Then click "Done".
 9. There should be some fluttering confetti and the message "You're all done!"
 
@@ -64,3 +64,5 @@ When I tested this out, it took me just over a minute to submit a three-page, tw
 Really, there's nothing extra to do on top of what your normally do to set up Gradescope assignments. Remind your students that the Gradescope app is the easiest and best way to submit handwritten work, but also remind them to read their feedback on the Gradescope website (for example, by following a link from Minerva).
 
 Actually, there is one thing. For a student to access a module on the Gradescope app, Gradescope must have picked up their details from Minerva. There are two ways this can be done. The first is that the student can follow a link from Minerva to Gradescope -- for example, when attempted to submit the first assignment *not* via the mobile app. The second is when the instructor "syncs the roster" on Gradescope. To make sure the app works first time for everyone, make sure to sync the roster -- shortly before releasing the first assignment is an ideal time. (If late-enrolling students have missed the roster syncing, invite them to follow a link from Minerva once -- they don't have to submit any work this way -- or re-sync the roster yourself.)
+
+To do this: On the Gradescope page for your module, click "Roster" on the left-hand menu, then choose "Sync Minerva Roster" from the bottom row (it may be hidden behind a "More" button). Make sure to *un-tick* "Email Notification: Let students know they were added to the course". See [the University's guide to Gradescope](https://desystemshelp.leeds.ac.uk/gradescope-staff/setting-up-your-gradescope-course/) for more details.
