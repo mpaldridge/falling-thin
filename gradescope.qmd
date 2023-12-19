@@ -1,0 +1,66 @@
+---
+title: "Using the Gradescope app"
+author: "Matthew Aldridge"
+format:
+  html:
+    embed-resources: true
+---
+
+## Introduction
+
+Many of us ask students to submit work to Gradescope that students will write by hand. By far the easiest way for students to scan-and-submit handwritten work is using the Gradescope mobile app.
+
+**Advantages of the Gradescope app:**
+
+* Students can scan and submit within the same app -- no more transferring documents between apps, or from phone to laptop.
+* High-quality, auto-cropped, low-filesize PDFs -- no more difficult-to-read scans or submission of multiple photograph image files.
+* Submission takes around 90 seconds.
+* The app can send students automated reminders of deadlines.
+
+**Disadvantages of the Gradescope app:**
+
+* The app is only for *submitting* work -- reading feedback must be done on the Gradescope website.
+* The app is not suitable if multiple files must be compiled together before submitting (eg handwritten maths *and* computer code, or a report with an attached PDF academic integrity form).
+* The app is only for students, making it difficult for instructors to check it's working properly.
+
+## Instructions for students
+
+### Logging on to the Gradescope app
+
+The Gradescope app can be downloaded from the iOS or Android app stores. On iOS, the full name of the app "Gradescope – Assessment Anywhere" and it has a blue barchart icon.
+ 
+Logging onto the app is a little bit of a hassle. On first use of the app, you will have to go through the following steps:
+
+1. Choose "University of Leeds" in answer to "Which school do you attend"
+2. Choose to log in via "School Credentials"
+3. Search (or scroll down a long list) to find "University of Leeds" again.
+4. Enter their username and password
+5. Get through Duo Authentication in the usual way.
+
+On subsequent log-ins after the first time, "University of Leeds" will be pre-selected on the first step, and it shouldn't necessary to repeat the fourth and fifth steps.
+ 
+### Submitting work
+
+Once logged into the Gradescope app, you can submit work for an assignment.
+
+1. In the "Courses" list, pick the module for which you want to submit work.
+2. In the "Not submitted" list, pick the assignment for which you want to submit work.
+3. Click "Scan".
+4. Photograph the first page of your work. The app should automatically crop your work, and colour-balance the image for prime readability, but you can adjust these on the rare occasion it goes wrong. Click "Next".
+5. Repeat step 4 until all pages of your work have been scanned. Then click "Done".
+6. Review your submission, and click "Submit".
+7. You now need to "assign" (or "tag") your pages. Click "Asign pages".
+8. For each page of your work, click which questions are answered on that page. Then click "Done".
+9. There should be some fluttering confetti and the message "You're all done!"
+
+When I tested this out, it took me just over a minute to submit a three-page, two-question set of answers -- 20 seconds to log into the app, and 45 seconds to scan, submit and assign my work.
+
+<div class="quarto-video ratio ratio-16x9">
+<iframe data-external="1" width="560" height="315" src="https://www.youtube.com/embed/VntgvJimbvc?si=TKS9gQheyufklpUN" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+</div>
+
+## Intructions for module leaders
+
+Really, there's nothing extra to do on top of what your normally do to set up Gradescope assignments. Remind your students that the Gradescope app is the easiest and best way to submit handwritten work, but also remind them to read their feedback on the Gradescope website (for example, by following a link from Minerva).
+
+Actually, there is one thing. For a student to access a module on the Gradescope app, Gradescope must have picked up their details from Minerva. There are two ways this can be done. The first is that the student can follow a link from Minerva to Gradescope -- for example, when attempted to submit the first assignment *not* via the mobile app. The second is when the instructor "syncs the roster" on Gradescope. To make sure the app works first time for everyone, make sure to sync the roster -- shortly before releasing the first assignment is an ideal time. (If late-enrolling students have missed the roster syncing, invite them to follow a link from Minerva once -- they don't have to submit any work this way -- or re-sync the roster yourself.)

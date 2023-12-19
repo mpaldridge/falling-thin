@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.475">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Matthew Aldridge">
+
+<title>Falling Moments and Thin Numbers</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="falling-doc_files/libs/clipboard/clipboard.min.js"></script>
+<script src="falling-doc_files/libs/quarto-html/quarto.js"></script>
+<script src="falling-doc_files/libs/quarto-html/popper.min.js"></script>
+<script src="falling-doc_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="falling-doc_files/libs/quarto-html/anchor.min.js"></script>
+<link href="falling-doc_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="falling-doc_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="falling-doc_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="falling-doc_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="falling-doc_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+</div>
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Falling Moments and Thin Numbers</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Matthew Aldridge </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>In a series of posts, I’m interested in the following question:</p>
+<p><em>When dealing with discrete “counting” random variables, what are some “authentically discrete”<br>
+operations we can perform and what “authentically discrete” results can we get?</em></p>
+<p>I’ll try to explain what I mean by this as we go.</p>
+<p>In this post, we’ll start with some revision of standard concepts for general random variables – the moments, the moment generating function, scaling, and the law of large numbers, and then look at what the discrete equivalents of these are.</p>
+<p>I should emphasise that I don’t think anything I will say is genuinely <em>new</em> – a lot of this is in Jørgensen &amp; Kokonendji, <a href="https://doi.org/10.1007/s10182-015-0250-z">“Discrete dispersion models and their Tweedie asymptotics”</a>, for example. But I do think the way of presenting it is a bit original. Or at least interesting and not that well known.</p>
+<section id="moments-mgfs-scaling-law-of-large-numbers" class="level2">
+<h2 class="anchored" data-anchor-id="moments-mgfs-scaling-law-of-large-numbers">Moments, MGFs, scaling, law of large numbers</h2>
+<section id="moments" class="level3">
+<h3 class="anchored" data-anchor-id="moments">Moments</h3>
+<p>For a random variable <span class="math inline">\(X\)</span> the <strong><span class="math inline">\(k\)</span>th moment</strong> <span class="math inline">\(\mathbb E X^k\)</span> is the expectation of the <span class="math inline">\(k\)</span>th power. Examples of the moments include:</p>
+<ul>
+<li>the 0th moment <span class="math inline">\(\mathbb EX^0 = 1\)</span>;</li>
+<li>the 1st moment <span class="math inline">\(\mathbb EX^1 = \mathbb EX\)</span>, which is the expectation (or “mean”);</li>
+<li>the 2nd moment <span class="math inline">\(\mathbb EX^2 = \operatorname{Var}(X) + (\mathbb EX)^2\)</span>, which is not quite the variance, but is closely related to it.</li>
+</ul>
+<p>In the first half of the twentieth centuries, mathematicians were very interested in “the moment problem”: <em>Given the moments <span class="math inline">\(\mathbb E X^k\)</span> of a random variable, can you recover its distribution?</em></p>
+<p>The answer is, in general, No.&nbsp;Most obviously, when the moments are infinite – there are lots of different distributions with inifinite expectation, for example. But even if the moments are finite, if <span class="math inline">\(\mathbb E X^k\)</span> grows very fast with <span class="math inline">\(k\)</span>, because a distribution has heavy tails, then the distribution may not be unique – the most famous example is probably the log-normal: there are random variables with the same moments as the log-normal that are not themselves log-normal.</p>
+<p>However, for “nice enough” variables, the answer to the moment problem is Yes – you can calculate the moments from the distribution, and get back the distribution from the moments. (For these posts, I’ll assume we’re always dealing with the “nice” case, and I’ll be fairly cavalier with things like infinite sums, convergence, exchanging limits/sums/derivatives, etc.)</p>
+<p>Many of the famous distributions have nice compact expressions for their moments – a promising sign that the moments are natural quantities to be looking at.</p>
+<table class="table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Distribution</th>
+<th style="text-align: center;">Moments</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Exponential<span class="math inline">\((1/\theta)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\mathbb E X^k = k!\, \theta^k\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Gamma<span class="math inline">\((\nu,1/\theta)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\mathbb E X^k = \nu^{\overline{k}}\, \theta^k\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Point mass <span class="math inline">\(\delta(\mu)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\mathbb E X^k = \mu^k\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Normal<span class="math inline">\((\mu, \sigma^2)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\mathbb EX^0 = 1\)</span> <br> <span class="math inline">\(\mathbb EX^1 = \mu\)</span><br> <span class="math inline">\(\mathbb EX^{k+1} = \mu \, \mathbb EX^k + k\sigma^2 \,\mathbb EX^{k-1}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>(In the Gamma row, <span class="math inline">\(n^{\overline k}\)</span> is Knuth’s notation for the “rising factorial” <span class="math inline">\(n(n+1)\cdots(n+k-1)\)</span>.)</p>
+<p>I include the point mass, because one of the themes in these posts will to be to try and stop thinking of “the number <span class="math inline">\(x\)</span>” and instead think more precisely about “a random variable <span class="math inline">\(X \sim \delta(x)\)</span> that equals <span class="math inline">\(x\)</span> with probability 1”.</p>
+</section>
+<section id="mgfs" class="level3">
+<h3 class="anchored" data-anchor-id="mgfs">MGFs</h3>
+<p>A useful way to deal with the moments of a random variable is through its <strong>moment generating function</strong> (MGF)</p>
+<p><span class="math display">\[ M_X(t) = \mathbb E \, \mathrm{e}^{tX} . \]</span></p>
+<p>This is so called because rearranging the definition to</p>
+<p><span class="math display">\[ M_X(t) = \mathbb E \, \mathrm{e}^{tX} = \mathbb E \sum_{k=0}^\infty \frac{(tX)^k}{k!} = \sum_{k=0}^\infty \mathbb E X^k \, \frac{t^k}{k!} \]</span></p>
+<p>shows that it is an “exponential generating function” whose coefficients are the moments <span class="math inline">\(\mathbb EX^k\)</span>.</p>
+<p>This means we can build the MGF from the moments:</p>
+<p><span class="math display">\[ M_X(t) = \sum_{k=0}^\infty \mathbb E X^k \, \frac{t^k}{k!} , \]</span></p>
+<p>and we can also recover the moments from the MGF:</p>
+<p><span class="math display">\[ \mathbb EX^k = \left. \frac{\mathrm{d}^k}{\mathrm{d}t^k} M_X \right|_{t=0} = M^{(k)}_X(0) . \]</span></p>
+<p>Again, the MGFs of the famous distributions often have pleasant expressions:</p>
+<table class="table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Distribution</th>
+<th style="text-align: center;">MGF</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Exponential<span class="math inline">\((1/\theta)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(M_X(t) = (1 - \theta t)^{-1}\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Gamma<span class="math inline">\((\nu,1/\theta)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(M_X(t) = (1 - \theta t)^{-\nu}\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Point mass <span class="math inline">\(\delta(\mu)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(M_X(t) = \mathrm{e}^{\mu t}\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Normal<span class="math inline">\((\mu, \sigma^2)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(M_X(t) = \exp\big(\mu t + \tfrac12\sigma^2 t^2\big)\)</span></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="adding" class="level3">
+<h3 class="anchored" data-anchor-id="adding">Adding</h3>
+<p>Adding independent random variables can often be a rather awkward operation – but working with MGFs makes it much simpler.</p>
+<p>This is because if <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> are independent, then</p>
+<p><span class="math display">\[ M_{X+Y}(t) = \mathbb E\,\mathrm{e}^{t(X+Y)} = \mathbb E\big(\mathrm{e}^{tX}\,\mathrm{e}^{tY}\big)
+=  \big(\mathbb E\,\mathrm{e}^{tX}\big)\big( \mathbb E\,\mathrm{e}^{tY}\big) = M_X(t)\,M_Y(t) \]</span></p>
+<p>So to add independent random variables, we simply multiply their MGFs. This makes it very easy to check, for example, that:</p>
+<ul>
+<li>Exponential<span class="math inline">\((1/\theta)\)</span> + Exponential<span class="math inline">\((1/\theta)\)</span> = Gamma<span class="math inline">\((2, 1/\theta)\)</span></li>
+</ul>
+<p><span class="math display">\[ (1 - \theta t)^{-1}(1 - \theta t)^{-1} = (1 - \theta t)^{-2} \]</span></p>
+<ul>
+<li>Gamma<span class="math inline">\((\nu_1, 1/\theta)\)</span> + Gamma<span class="math inline">\((\nu_2, 1/\theta)\)</span> = Gamma<span class="math inline">\((\nu_1 + \nu_2, 1/\theta)\)</span></li>
+</ul>
+<p><span class="math display">\[ (1 - \theta t)^{-\nu_1}(1 - \theta t)^{-\nu_2} = (1 - \theta t)^{-(\nu_1+\nu_2)} \]</span></p>
+<ul>
+<li>Point mass <span class="math inline">\(\delta(\mu_1)\)</span> + Point mass <span class="math inline">\(\delta(\mu_2)\)</span> = Point mass <span class="math inline">\(\delta(\mu_1 + \mu_2)\)</span></li>
+</ul>
+<p><span class="math display">\[ \mathrm{e}^{\mu_1 t}\,\mathrm{e}^{\mu_2 t} = \mathrm{e}^{(\mu_1 + \mu_2) t}\]</span></p>
+<ul>
+<li>Normal<span class="math inline">\((\mu_1, \sigma^2_1)\)</span> + Normal<span class="math inline">\((\mu_2, \sigma^2_2)\)</span> = Normal<span class="math inline">\((\mu_1 + \mu_2, \sigma^2_1 + \sigma_2^2)\)</span></li>
+</ul>
+<p><span class="math display">\[ \exp\big(\mu_1 t + \tfrac12 \sigma_1^2 t^2\big)\,\exp\big(\mu_2 t + \tfrac12 \sigma_2^2 t^2\big) = \exp\big((\mu_1 + \mu_2) t + \tfrac12(\sigma_1^2 + \sigma_2^2)t^2\big) \]</span></p>
+</section>
+<section id="scaling" class="level3">
+<h3 class="anchored" data-anchor-id="scaling">Scaling</h3>
+<p>By “scaling”, I simply mean multiplying the random variable <span class="math inline">\(X\)</span> by a constant <span class="math inline">\(a \in \mathbb R\)</span> to get <span class="math inline">\(aX\)</span>.</p>
+<p>Again, scaling works well with MGFs:</p>
+<p><span class="math display">\[ M_{aX}(t) = \mathbb E\, \mathrm{e}^{t(aX)} = \mathbb E\, \mathrm{e}^{(at)X} = M_X(at) \]</span></p>
+<p>So to scale a random variable by <span class="math inline">\(a\)</span>, we just multiply the parameter in its MGF by <span class="math inline">\(a\)</span>. This makes it very easy to prove, for example, that</p>
+<ul>
+<li><span class="math inline">\(\mathbb E(aX) = a\,\mathbb EX\)</span></li>
+<li><span class="math inline">\(\mathbb E(aX)^k = a^k \, \mathbb EX^k\)</span></li>
+<li><span class="math inline">\(a_2(a_1X) = (a_2a_1)X\)</span></li>
+<li><span class="math inline">\(a(X + Y) = aX + aY\)</span> for independent <span class="math inline">\(X, Y\)</span></li>
+</ul>
+<p>We can also easily check that scaling the famous distributions often just means changing the parameters within the family:</p>
+<table class="table">
+<colgroup>
+<col style="width: 28%">
+<col style="width: 21%">
+<col style="width: 21%">
+<col style="width: 28%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Distribution</th>
+<th style="text-align: center;">MGF</th>
+<th style="text-align: center;">Scaled MGF</th>
+<th style="text-align: center;">Scaled distribution</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Exponential<span class="math inline">\((1/\theta)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\((1 - \theta t)^{-1}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\((1 - a\theta t)^{-1}\)</span></td>
+<td style="text-align: center;">Exponential<span class="math inline">\(\big(1/(a\theta)\big)\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Gamma<span class="math inline">\((\nu,1/\theta)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\((1 - \theta t)^{-\nu}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\((1 - a\theta t)^{-\nu}\)</span></td>
+<td style="text-align: center;">Gamma<span class="math inline">\(\big(\nu,1/(a\theta)\big)\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Point mass <span class="math inline">\(\delta(\mu)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\mathrm{e}^{\mu t}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\mathrm{e}^{a\mu t}\)</span></td>
+<td style="text-align: center;">Point mass <span class="math inline">\(\delta(a\mu)\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Normal<span class="math inline">\((\mu, \sigma^2)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\exp\big(\mu t + \tfrac12 \sigma^2 t^2\big)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\exp\big(a\mu t + \tfrac12 a^2\sigma^2 t^2\big)\)</span></td>
+<td style="text-align: center;">Normal<span class="math inline">\((a\mu, a^2\sigma^2)\)</span></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="limits" class="level3">
+<h3 class="anchored" data-anchor-id="limits">Limits</h3>
+<p>Let’s briefly note that MGFs work well with limits: if <span class="math inline">\(M_{X_n}(t) \to M_Y(t)\)</span>, then <span class="math inline">\(X_n \to Y\)</span> in distribution.</p>
+<p>(If everything is well enough behaved: the convergence of the MGFs has to hold in a neighbourhood of <span class="math inline">\(t = 0\)</span> with <span class="math inline">\(M_Y\)</span> continuous at <span class="math inline">\(t = 0\)</span>, or something like that.)</p>
+</section>
+<section id="law-of-large-numbers" class="level3">
+<h3 class="anchored" data-anchor-id="law-of-large-numbers">Law of large numbers</h3>
+<p>We can now come to perhaps the most important result in the whole of probability theory: the law of large numbers.</p>
+<p><strong>Theorem (Law of large numbers).</strong> <em>Let <span class="math inline">\(X_1, X_2, \dots\)</span> be IID random variables with expectation <span class="math inline">\(\mathbb EX_1 = \mu\)</span>. Write <span class="math inline">\(Y_n\)</span> for the scaled sum</em></p>
+<p><span class="math display">\[ Y_n = \frac{1}{n} \big(X_1 + X_2 + \cdots + X_n\big) . \]</span></p>
+<p><em>Then <span class="math inline">\(Y_n \to \delta(\mu)\)</span> in distribution as <span class="math inline">\(n \to \infty\)</span>.</em></p>
+<p>The conclusion of the law of large numbers is usually stated as “<span class="math inline">\(Y_n \to \mu\)</span> in probability”, but our statement here is equivalent, and is more in harmony with our principle of thinking not about the number <span class="math inline">\(\mu\)</span> but rather about a random variable that equals <span class="math inline">\(\mu\)</span> with probability 1.</p>
+<p>The proof of the law of large numbers is fairly straightforward, using what we have learned about the MGFs.</p>
+<p><em>Proof.</em> We need to show that the MGF <span class="math inline">\(M_{Y_n}\)</span> tends to the MGF of a point mass at <span class="math inline">\(\mu\)</span>.</p>
+<p>If we write <span class="math inline">\(M_X\)</span> for the MGF of the <span class="math inline">\(X_i\)</span>s, then, from what we have learned about adding independent random variables and about scaling, we have</p>
+<p><span class="math display">\[ M_{Y_n}(t) = M_X\Big(\frac{t}{n}\Big)^n \]</span></p>
+<p>We can approximate <span class="math inline">\(M_X\)</span> by just using the first two terms of the infinite sum</p>
+<p><span class="math display">\[ M_X(t) = \sum_{k=0}^\infty \mathbb EX^k \, \frac{t^k}{k!} = 1 + \mu t + \cdots , \]</span></p>
+<p>where the dots denote terms of order <span class="math inline">\(t^2\)</span> or higher. Then the MGF of <span class="math inline">\(Y_n\)</span> is then</p>
+<p><span class="math display">\[ M_{Y_n}(t) = M_X\Big(\frac{t}{n}\Big)^n = \left(1 + \frac{\mu t}{n} + \cdots \right)^n \to \mathrm{e}^{\mu t} , \]</span></p>
+<p>where the dots denote terms of order <span class="math inline">\(1/n^2\)</span> or smaller.</p>
+<p>But <span class="math inline">\(\mathrm{e}^{\mu t}\)</span> is indeed the MGF of a point mass <span class="math inline">\(\delta(\mu)\)</span>. <span style="float: right">▢</span></p>
+</section>
+<section id="summary" class="level3">
+<h3 class="anchored" data-anchor-id="summary">Summary</h3>
+<ul>
+<li>The <strong>moments</strong> of a random variable <span class="math inline">\(X\)</span> are <span class="math inline">\(\mathbb EX^k\)</span></li>
+<li>The <strong>MGF</strong> is <span class="math inline">\({\displaystyle M_X(t) = \mathbb E\, \mathrm{e}^{tX} = \sum_{k=0}^\infty \mathbb EX^k \, \frac{t^k}{k!}}\)</span></li>
+<li><strong>Adding</strong> independent random variabless: <span class="math inline">\(M_{X+Y}(t) = M_X(t)\,M_Y(t)\)</span></li>
+<li><strong>Scaling</strong>: <span class="math inline">\(M_{aX}(t) = M_X(at)\)</span></li>
+<li><strong>Law of large numbers</strong>: If <span class="math inline">\(Y_n = \frac{1}{n} (X_1 + X_2 + \cdots + X_n)\)</span>, then <span class="math inline">\(M_{Y_n}(t) = M_X\big(\frac{t}{n}\big)^n \to \mathrm{e}^{\mu t}\)</span>, which is the MGF of the point mass <span class="math inline">\(\delta(\mu)\)</span>.</li>
+</ul>
+</section>
+</section>
+<section id="falling-moments-fmgfs-thinning-law-of-thin-numbers" class="level2">
+<h2 class="anchored" data-anchor-id="falling-moments-fmgfs-thinning-law-of-thin-numbers">Falling moments, FMGFs, thinning, law of thin numbers</h2>
+<p>We’re now going to look at discrete random variables – specifically, “count random variables” that take values in the non-negative integers <span class="math inline">\(\mathbb Z_+ = \{0, 1, 2, \dots\}\)</span>.</p>
+<section id="moments-1" class="level3">
+<h3 class="anchored" data-anchor-id="moments-1">Moments?</h3>
+<p>It would seem natural to start by looking again at the moments <span class="math inline">\(\mathbb EX^k\)</span>. But (after looking them up on Wikipedia or Wolfram Mathworld), I have some bad news to report:</p>
+<table class="table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Distribution</th>
+<th style="text-align: center;">Moments</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Bernoulli<span class="math inline">\((p)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\mathbb E X^k = p\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Binomial<span class="math inline">\((n, p)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\({\displaystyle \mathbb E X^k = \sum_{j=1}^k \genfrac{\lbrace}{\rbrace}{0pt}{}{k}{j} n^{\underline{j}} p^j}\)</span> <br> where <span class="math inline">\(\genfrac{\lbrace}{\rbrace}{0pt}{}{k}{j}\)</span> are Stirling numbers <br> of the second kind</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Geometric<span class="math inline">\((p)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\mathbb E X^k = p \operatorname{Li}_{-k} (1-p)\)</span> <br> where <span class="math inline">\(\operatorname{Li}_{-k}\)</span> is a polylogarithm function</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">NegBin<span class="math inline">\((n,p)\)</span></td>
+<td style="text-align: center;"><em>(Neither Wikipedia nor MathWorld say)</em></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Poisson<span class="math inline">\((\mu)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\({\displaystyle \mathbb E X^k = \sum_{j=1}^k \genfrac{\lbrace}{\rbrace}{0pt}{}{k}{j} \lambda^j}\)</span> <br> where <span class="math inline">\(\genfrac{\lbrace}{\rbrace}{0pt}{}{k}{j}\)</span> are Stirling numbers <br> of the second kind</td>
+</tr>
+</tbody>
+</table>
+<p>Unlike the pleasant compact formulas we had before, we now have sums of Stirling numbers of the second kind, or negative polylogarithm functions (whatever they are…?).</p>
+<p>This also occurred to me when I was teaching our <a href="https://mpaldridge.github.io/math1710/">first-year probability module</a>. To calculate the variance <span class="math inline">\(\operatorname{Var}(X) = \mathbb EX^2 - (\mathbb EX)^2\)</span> of the geometric or Poisson distributions, for example, you need to calculate</p>
+<p><span class="math display">\[ \begin{align*}
+\mathbb EX^2 &amp;= \sum_{x=0}^\infty x^2 \,(1-p)^x p \\
+\mathbb EX^2 &amp;= \sum_{x=0}^\infty x^2\,\mathrm{e}^{-\mu}\, \frac{\mu^x}{x!} ,
+\end{align*} \]</span></p>
+<p>and these sums are actually rather difficult to calculate. Instead, it turns out there’s a clever trick, which is to calculate <span class="math inline">\(\mathbb EX(X-1) = \mathbb EX^2 - \mathbb EX\)</span> instead, which allows one to then find <span class="math inline">\(\mathbb EX^2 = \mathbb EX(X-1) + \mathbb EX\)</span>. But working with this <span class="math inline">\(\mathbb EX(X-1)\)</span> is, somehow, magically easier. For the geometric distribution, we have</p>
+<p><span class="math display">\[ \begin{align*}
+\mathbb EX(X-1) &amp;= \sum_{x=0}^\infty x(x-1) (1-p)^x p \\
+&amp;= p(1-p)^2 \sum_{x=0}^\infty x(x-1) (1-p)^{x-2} \\
+&amp;= p(1-p)^2 \frac{\mathrm{d}^2}{\mathrm{d}p^2} \sum_{x=0}^\infty (1-p)^x \\
+&amp;= p(1-p)^2 \frac{\mathrm{d}^2}{\mathrm{d}p^2} \frac{1}{p} \\
+&amp;= p(1-p)^2\,\frac{2}{p^3} \\
+&amp;= 2 \left(\frac{1-p}{p}\right)^2 ,
+\end{align*} \]</span></p>
+<p>where the second derivative of a geometric progression pops out. And for the Poisson distribution, we have</p>
+<p><span class="math display">\[ \begin{align*}
+\mathbb EX(X-1) &amp;= \sum_{x=0}^\infty x(x-1)\,\mathrm{e}^{-\mu}\, \frac{\mu^x}{x!} \\
+&amp;= \mathrm{e}^{-\mu}\,\mu^2 \sum_{x=0}^\infty \frac{\mu^{x-2}}{(x-2)!} \\
+&amp;= \mathrm{e}^{-\mu}\,\mu^2\, \mathrm{e}^{\mu} \\
+&amp;= \mu^2
+\end{align*} \]</span></p>
+<p>where the <span class="math inline">\(x(x-1)\)</span> ends up conveniently cancelling with the first two terms of <span class="math inline">\(x! = x(x-1)(x-2)\cdots 1\)</span>.</p>
+<p>So what’s going on here that makes the moments of these discrete distributions so unpleasant, but this <span class="math inline">\(\mathbb EX(X-1)\)</span> so much easier?</p>
+</section>
+<section id="falling-moments" class="level3">
+<h3 class="anchored" data-anchor-id="falling-moments">Falling moments</h3>
+<p>This quantity <span class="math inline">\(\mathbb EX(X-1)\)</span> is the first interesting example of the <strong>falling moments</strong> (or <strong>factorial moments</strong>)</p>
+<p><span class="math display">\[ \mathbb E X^{\underline{k}} = \mathbb E X(X-1) \cdots (X-k+1) . \]</span></p>
+<p>Here, we’re again using Knuth’s notation</p>
+<p><span class="math display">\[x^{\underline k} = x(x-1) \cdots(x-k-1)\]</span></p>
+<p>for the <strong>falling factorial</strong>.</p>
+<p>(Actually, the term “factorial moment” seems quite a lot more common in the literature than “falling moment”, but I prefer “falling moment” – and my PhD supervisor <a href="https://people.maths.bris.ac.uk/~maotj/">Olly</a> always said “falling moment” too, so that’s what I learned as a young probabilist.)</p>
+<ul>
+<li><span class="math inline">\(\mathbb EX^{\underline{0}} = 1\)</span></li>
+<li><span class="math inline">\(\mathbb EX^{\underline{1}} = \mathbb EX\)</span></li>
+<li><span class="math inline">\(\mathbb EX^{\underline{2}} = \mathbb EX(X-1)\)</span></li>
+</ul>
+<p>A sign that we’re heading in the right direction is that the famous discrete distributions have much more pleasant expressions for their falling moments.</p>
+<table class="table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Distribution</th>
+<th style="text-align: center;">Falling moments</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Bernoulli<span class="math inline">\((\theta)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\mathbb E X^{\underline{1}} = \theta\)</span>, then <span class="math inline">\(E X^{\underline{k}} = 0\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Binomial<span class="math inline">\((n, \theta)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\mathbb E X^{\underline{k}} = n^{\underline{k}} \,\theta^k\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Geometric<span class="math inline">\((\frac{1}{1+\theta})\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\mathbb E X^{\underline{k}} = k! \,\theta^k\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">NegBin<span class="math inline">\((n,\frac{1}{1+\theta})\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\mathbb E X^{\underline{k}} = n^{\overline{k}} \,\theta^k\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Poisson<span class="math inline">\((\mu)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\mathbb E X^{\underline{k}} = \mu^k\)</span></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="fmgf" class="level3">
+<h3 class="anchored" data-anchor-id="fmgf">FMGF</h3>
+<p>Now, if the moment generating function (MGF)</p>
+<p><span class="math display">\[ M_X(t) = \sum_{k=0}^\infty \mathbb EX^k \, \frac{t^k}{k!}  \]</span></p>
+<p>generates the moments, then is seems like a <strong>falling moment generating function</strong> (FMGF)</p>
+<p><span class="math display">\[ \Phi_X(t) = \sum_{k=0}^\infty \mathbb EX^{\underline k} \, \frac{t^k}{k!}  \]</span></p>
+<p>ought to generate the falling moments.</p>
+<p>We can rearrange this as</p>
+<p><span class="math display">\[ \Phi_X(t) = \sum_{k=0}^\infty \mathbb EX^{\underline k} \, \frac{t^k}{k!}  
+= \mathbb E\sum_{k=0}^\infty \binom{X}{k} \, t^k
+= \mathbb E(1+t)^X \]</span></p>
+<p>The FMGF in this exact form seems to appear rather rarely, barely at all, in the literature – but similar ideas are about. Most notably, the FMGF <span class="math inline">\(\Phi_X(t) = \mathbb E(1+t)^X\)</span> is extremely similar to the well-known probability generating function (PGF)</p>
+<p><span class="math display">\[G_X(t) = \mathbb E t^X = \sum_{k=0}^\infty \mathbb P(X = k)\, t^k ; \]</span></p>
+<p>specifically, <span class="math inline">\(M_X(t) = G_X(1+t)\)</span>, so they only differ by a shift of 1. So our new FMGF doesn’t give us anything more “powerful” than the PGF; however, we will argue below that the FMGF is more pleasant to deal with, and is a more direct equivalent to the MGF.</p>
+<p>(More obscurely, J&amp;K????? deal with the “factorial cumulant generating function” which, in our notation, is <span class="math inline">\(\log \Phi_X(t)\)</span>; and ?????? deals with the “alternate probability generating function” <span class="math inline">\(\Phi_X(-t) = \mathbb E(1-t)^X\)</span>. I’ll also note here that the name “factorial moment generating function” is occasionally used as a different name for the PGF, which is why we prefer “falling moment generating function” for <span class="math inline">\(\Phi_X\)</span> here.)</p>
+<p>Yet another sign we’re on the right track is the neat and pleasant expressions for FMGFs of the famous distributions</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Distribution</th>
+<th style="text-align: center;">FMGF</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Bernoulli<span class="math inline">\((\theta)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\Phi_X(t) = 1 + \theta t\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Binomial<span class="math inline">\((n, \theta)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\Phi_X(t) = (1 + \theta t)^n\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Geometric<span class="math inline">\((\frac{1}{1+\theta})\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\Phi_X(t) = (1 - \theta t)^{-1}\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">NegBin<span class="math inline">\((n,\frac{1}{1+\theta})\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\Phi_X(t) = (1 - \theta t)^{-n}\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Poisson<span class="math inline">\((\mu)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\Phi_X(t) = \mathrm{e}^{\mu t}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>In fact, it’s often the case that the FMGF of a count distribution equals the MGF of a non-count distribution.</p>
+<table class="table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Distribution</th>
+<th style="text-align: center;">MGF / FMGF</th>
+<th style="text-align: center;">Distribution</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">—</td>
+<td style="text-align: center;"><span class="math inline">\(1 + \theta t\)</span></td>
+<td style="text-align: center;">Bernoulli<span class="math inline">\((\theta)\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">—</td>
+<td style="text-align: center;"><span class="math inline">\((1 + \theta t)^n\)</span></td>
+<td style="text-align: center;">Binomial<span class="math inline">\((n, \theta)\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Exponential<span class="math inline">\(\big(\frac{1}{\theta}\big)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\((1 - \theta t)^{-1}\)</span></td>
+<td style="text-align: center;">Geometric<span class="math inline">\(\big(\frac{1}{1+\theta}\big)\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Gamma<span class="math inline">\(\big(n, \frac{1}{\theta}\big)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\((1 - \theta t)^{-n}\)</span></td>
+<td style="text-align: center;">NegBin<span class="math inline">\(\big(n, \frac{1}{1+\theta}\big)\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Point mass <span class="math inline">\(\delta(\mu)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\mathrm{e}^{\mu t}\)</span></td>
+<td style="text-align: center;">Poisson<span class="math inline">\((\mu)\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>I think “the geometric is the discrete equivalent of the exponential” and “the negative binomial is the discrete equivalent of the Gamma” are ideas most probabilists are comfortable with. But I here want to advance the cheekier, more counterintuitive thesis that the discrete equivalent of a point mass at <span class="math inline">\(\mu\)</span> is the Poisson<span class="math inline">\((\mu)\)</span> distribution.</p>
+<p>We will now want to look at how addition of independent random variables works with the FMGF, and think about what the discrete equivalent of scaling is. But first, I can’t resist a quick diversion.</p>
+</section>
+<section id="diversion-law-of-small-numbers" class="level3">
+<h3 class="anchored" data-anchor-id="diversion-law-of-small-numbers">Diversion: Law of small numbers</h3>
+<p>A famous result on count distributions is the Poisson approximation to the binomial – sometimes known as the “law of small numbers”.</p>
+<p><strong>Theorem (Law of small numbers).</strong> <em>Let <span class="math inline">\(X_n \sim \operatorname{Bin}\big(n, \frac{\mu}{n} \big)\)</span> and <span class="math inline">\(Y \sim \operatorname{Po}(\mu)\)</span>. Then <span class="math inline">\(X_n \to Y\)</span> in distribution as <span class="math inline">\(n \to \infty\)</span>.</em></p>
+<p>In my first-year lecture [???????], a prove this just by showing that the PMF of <span class="math inline">\(X_n\)</span> tends pointwise to the PMF of <span class="math inline">\(Y\)</span>, which is no fun at all. But the proof using the FMGF could not be simpler.</p>
+<p><em>Proof.</em> The FMGF of <span class="math inline">\(X_n\)</span> is</p>
+<p><span class="math display">\[ \Phi_{X_n}(t) = \left(1 + \frac{\mu t}{n}\right)^n \to \mathrm{e}^{\mu t} = \Phi_Y(t) , \]</span></p>
+<p>which is the FMGF of <span class="math inline">\(Y\)</span>. <span style="float: right">▢</span></p>
+</section>
+<section id="addition-for-fmgfs" class="level3">
+<h3 class="anchored" data-anchor-id="addition-for-fmgfs">Addition for FMGFs</h3>
+<p>Addition of independent random variables also works nicely for the FMGF, as it does for the MGF (and, in the interests of faireness I should point out, as it does for the probability generating function too).</p>
+<p><span class="math display">\[ \Phi_{X+Y} (t) = \mathbb E (1+t)^{X+Y}
+  = \mathbb E (1+t)^X(1+t)^Y
+  = \big(\mathbb E(1+t)^X\big)\big(\mathbb E(1+t)^Y\big)
+  = \Phi_X(t) \, \Phi_Y(t) \]</span></p>
+<p>In particular, this shows the sum of two independent Poissons is Poisson, since</p>
+<p><span class="math display">\[ \mathrm{e}^{\mu_1 t}\,\mathrm{e}^{\mu_2 t} = \mathrm{e}^{(\mu_1+\mu_2) t} . \]</span></p>
+</section>
+</section>
+<section id="thinning" class="level2">
+<h2 class="anchored" data-anchor-id="thinning">Thinning</h2>
+<p>The scaling, <span class="math inline">\(aX\)</span> doesn’t really work for count random variables. That’s because (unless the scaling parameter <span class="math inline">\(a\)</span> happens to be a non-negative integer) if we scale a count random variable we don’t end up with a count random variable. For example, if <span class="math inline">\(X\)</span> takes values in <span class="math inline">\(\{0,1,2,3,4\dots\}\)</span>, then <span class="math inline">\(0.7X\)</span> takes values in <span class="math inline">\(\{0, 0.7, 1.4, 2.1, 2.8, \dots\}\)</span>, which isn’t a counting random variable any more.</p>
+<p>Instead, a more “authentically discrete” concept is <a href="http://real-j.mtak.hu/507/">Rényi’s</a> concept of <strong>thinning</strong>.</p>
+<p>Suppose I throw a random number <span class="math inline">\(X\)</span> of balls to you. You try to catch them: you catch each ball independently with probability <span class="math inline">\(a\)</span>, and you drop each ball with probability <span class="math inline">\(1-a\)</span> Then the number of balls you catch is <span class="math inline">\(Y = a\circ X\)</span>, the <strong><span class="math inline">\(a\)</span>-thinning</strong> of <span class="math inline">\(X\)</span>.</p>
+<p>More formally, if <span class="math inline">\(X\)</span> is a discrete counting random variable, and <span class="math inline">\(a \in [0,1]\)</span> a constant, then the <strong><span class="math inline">\(a\)</span>-thinning</strong> <span class="math inline">\(a\circ X\)</span> of <span class="math inline">\(X\)</span> has conditional distribution, given <span class="math inline">\(X\)</span>, of</p>
+<p><span class="math display">\[ (a \circ X) \mid X \sim \text{Bin}(X, a) . \]</span></p>
+<p>Or equivalently, <span class="math inline">\(a\circ X\)</span> is a random sum</p>
+<p><span class="math display">\[ a \circ X = \sum_{i=1}^X B_i , \]</span></p>
+<p>where the <span class="math inline">\(B_i\)</span> are IID Bernoulli<span class="math inline">\((a)\)</span>.</p>
+<p>The key point here, is that the FMGF behaves with respect to thinning in the exact same way the MGF bahves with replace to scaling.</p>
+<p><strong>Theorem.</strong> <em>Let <span class="math inline">\(X\)</span> be a discrete random variable with FMGF <span class="math inline">\(\Phi_X\)</span>, and let <span class="math inline">\(a \in [0,1]\)</span>. Then the FMGF of the <span class="math inline">\(a\)</span>-thinning <span class="math inline">\(a \circ X\)</span> is , <span class="math inline">\(\Phi_{a\circ X}(t) = \Phi(at)\)</span>.</em></p>
+<p>(I should thank <a href="https://people.maths.bris.ac.uk/~maotj/">Olly</a> again for bringing this to my attention.)</p>
+<p><em>Proof.</em></p>
+<p><span class="math display">\[\begin{align*}
+\Phi_{a\circ X}(t) &amp;= \mathbb E(1+t)^{a \circ X} \\
+  &amp;= \mathbb E\, \mathbb E \big((1+t)^{a \circ X} \ \mid X\big) \\
+  &amp;= \mathbb E \Phi_{\operatorname{Bin}(X,a)}(t) \\
+  &amp;= \mathbb E (1 + at)^X \\
+  &amp;= \Phi_X(at)
+\end{align*}\]</span></p>
+<p><span style="float: right">▢</span></p>
+<p>This allows us to easily check the thinnings of some count disctributios:</p>
+<ul>
+<li><span class="math inline">\(a \circ \text{Bern}(\theta) = \text{Bern}(a\theta)\)</span></li>
+<li><span class="math inline">\(a \circ \text{Bin}(n, \theta) = \text{Bin}(n, a\theta)\)</span></li>
+<li><span class="math inline">\(a \circ \operatorname{Geom}\big(\frac{1}{1+\theta}\big) = \operatorname{Geom}\big(\frac{1}{1+a\theta}\big)\)</span></li>
+<li><span class="math inline">\(a \circ \operatorname{NegBin}\big(n, \frac{1}{1+\theta}\big) = \operatorname{NegBin}\big(n, \frac{1}{1+a\theta}\big)\)</span></li>
+<li><span class="math inline">\(a \circ \operatorname{Po}(\mu) = \operatorname{Po}(a\mu)\)</span></li>
+</ul>
+<p>Further, to accompany the properties of scaling we saw earlier…</p>
+<ul>
+<li><span class="math inline">\(\mathbb E(aX) = a\,\mathbb EX\)</span></li>
+<li><span class="math inline">\(\mathbb E(aX)^k = a^k \, \mathbb EX^k\)</span></li>
+<li><span class="math inline">\(a_2(a_1X) = (a_2a_1)X\)</span></li>
+<li><span class="math inline">\(a(X + Y) = aX + aY\)</span> for independent <span class="math inline">\(X, Y\)</span>,</li>
+</ul>
+<p>…we easily get the equivalent properties of thinning</p>
+<ul>
+<li><span class="math inline">\(\mathbb E(a\circ X) = a\,\mathbb EX\)</span></li>
+<li><span class="math inline">\(\mathbb E(a\circ X)^{\underline{k}} = a^k \, \mathbb EX^{\underline{k}}\)</span></li>
+<li><span class="math inline">\(a_2\circ (a_1 \circ X) = (a_2a_1)\circ X\)</span></li>
+<li><span class="math inline">\(a\circ (X + Y) = a\circ X + a\circ Y\)</span> for independent <span class="math inline">\(X, Y\)</span>.</li>
+</ul>
+<p>There is one crucial difference, though. While scaling exists for any <span class="math inline">\(a \in \mathbb R\)</span>, the thinning only exists for <span class="math inline">\(0 \leq a \leq 1\)</span>.</p>
+</section>
+<section id="reminder-law-of-large-numbers" class="level2">
+<h2 class="anchored" data-anchor-id="reminder-law-of-large-numbers">Reminder: Law of large numbers</h2>
+<p><strong>Theorem (Law of large numbers).</strong> <em>Let <span class="math inline">\(X_1, X_2, \dots\)</span> be IID random variables with expectation <span class="math inline">\(\mathbb EX_1 = \mu\)</span>. Write <span class="math inline">\(Y_n\)</span> for the scaled sum</em> <span class="math display">\[ Y_n = \frac{1}{n} (X_1 + \cdots + X_n) . \]</span> <em>Then <span class="math inline">\(Y_n \to \delta(\mu)\)</span> in distribution as <span class="math inline">\(n \to \infty\)</span>.</em></p>
+<div class="incremental">
+<p>This does apply for count random variables, but is not “authentically discrete”.</p>
+</div>
+</section>
+<section id="law-of-thin-numbers" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="law-of-thin-numbers">Law of thin numbers</h2>
+<p>This result is called the “law of thin numbers” by Harremoës, Johnson and Kontoyiannis (2010).</p>
+<p><strong>Theorem (Law of thin numbers).</strong> <em>Let <span class="math inline">\(X_1, X_2, \dots\)</span> be IID discrete counting random variables with expectation <span class="math inline">\(\mathbb EX_1 = \mu\)</span>. Write <span class="math inline">\(Y_n\)</span> for the thinned sum</em> <span class="math display">\[ Y_n = \frac{1}{n} \circ \big(X_1 + \cdots + X_n\big) . \]</span> <em>Then <span class="math inline">\(Y_n \to \operatorname{Po}(\mu)\)</span> in distribution as <span class="math inline">\(n \to \infty\)</span>.</em></p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>P Harremoës, O Johnson &amp; I Kontoyiannis, <a href="https://doi.org/10.1109/TIT.2010.2053893">“Thinning, entropy, and the law of thin numbers”</a>, <em>IEEE Transactions on Information Theory</em>, 2010.</p>
+</div></div></section>
+<section id="laws-of-large-and-thin-numbers" class="level2">
+<h2 class="anchored" data-anchor-id="laws-of-large-and-thin-numbers">Laws of large and thin numbers</h2>
+<div class="column" style="width:49%;">
+<p><strong>Theorem (Law of large numbers).</strong> <em>Let</em> <span class="math inline">\(X_1, X_2, \dots\)</span><br>
+<em>be IID</em><br>
+<em>random variables</em><br>
+<em>with expectation <span class="math inline">\(\mathbb EX_1 = \mu\)</span>.</em><br>
+<em>Write <span class="math inline">\(Y_n\)</span> for the scaled sum</em> <span class="math display">\[ Y_n = \tfrac{1}{n} (X_1 + \cdots + X_n) . \]</span> <em>Then <span class="math inline">\(Y_n \to \delta(\mu)\)</span></em><br>
+<em>in distribution as <span class="math inline">\(n \to \infty\)</span>.</em></p>
+</div>
+<div class="column" style="width:49%;">
+<p><strong>Theorem (Law of thin numbers).</strong> <em>Let</em> <span class="math inline">\(X_1, X_2, \dots\)</span><br>
+<em>be IID discrete count random variables</em><br>
+<em>with expectation <span class="math inline">\(\mathbb EX_1 = \mu\)</span>.</em><br>
+<em>Write <span class="math inline">\(Y_n\)</span> for the thinned sum</em> <span class="math display">\[ Y_n = \tfrac{1}{n} \circ (X_1 + \cdots + X_n) . \]</span> <em>Then <span class="math inline">\(Y_n \to \operatorname{Po}(\mu)\)</span></em><br>
+<em>in distribution as <span class="math inline">\(n \to \infty\)</span>.</em></p>
+</div>
+</section>
+<section id="law-of-thin-numbers-proof" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="law-of-thin-numbers-proof">Law of thin numbers: Proof</h2>
+<p><span class="math display">\[ Y_n = \frac{1}{n} \circ \big(X_1 + X_2 + \cdots + X_n\big)  \]</span></p>
+<p>So the FMGF of <span class="math inline">\(Y_n\)</span> is <span class="math display">\[ \Phi_{Y_n}(t) = \Phi_X\Big(\frac{t}{n}\Big)^n \]</span></p>
+<p>Let’s approximate <span class="math display">\[ \Phi_X(t) = \sum_{k=0}^\infty \mathbb EX^\underline{k} \, \frac{t^k}{k!} = 1 + \mu t + \cdots \]</span></p>
+<p><span class="math display">\[ \Phi_{Y_n}(t) = \Phi_X\Big(\frac{t}{n}\Big)^n = \left(1 + \frac{\mu t}{n} + \cdots \right)^n \to \mathrm{e}^{\mu t}\]</span></p>
+<p>But <span class="math inline">\(\mathrm{e}^{\mu t}\)</span> is the FMGF of a Poisson(<span class="math inline">\(\mu\)</span>) distribution. <span style="float: right">▢</span></p>
+</section>
+<section id="conclusion-a-dictionary" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion-a-dictionary">Conclusion: A dictionary</h2>
+<table class="table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">General RVs</th>
+<th style="text-align: center;">Counting RVs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Moments</td>
+<td style="text-align: center;">Falling moments</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Moment <br> generating function</td>
+<td style="text-align: center;">Falling moment <br> generating function</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Adding independent RVs</td>
+<td style="text-align: center;">Adding independent RVs</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Scaling</td>
+<td style="text-align: center;">Thinning</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Point mass</td>
+<td style="text-align: center;">Poisson distribution</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Law of large numbers</td>
+<td style="text-align: center;">Law of thin numbers</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="what-about-the-central-limit-theorem" class="level1 page-columns page-full">
+<h1>3. What about the central limit theorem?</h1>
+<section id="central-limit-theorem" class="level2">
+<h2 class="anchored" data-anchor-id="central-limit-theorem">Central limit theorem</h2>
+<p><strong>Theorem (Central limit theorem).</strong> <em>Let <span class="math inline">\(X_1, X_2, \dots\)</span> be IID random variables with expectation <span class="math inline">\(\mathbb EX_1 = \mu\)</span> and variance <span class="math inline">\(\sigma^2\)</span>. Write <span class="math inline">\(Z_n\)</span> for the scaled and shifted sum</em> <span class="math display">\[ Z_n = \frac{1}{\sqrt{n}} \big((X_1 + \cdots + X_n) - n\mu\big) . \]</span> <em>Then <span class="math inline">\(Z_n \to \operatorname{N}(0, \sigma^2)\)</span> in distribution as <span class="math inline">\(n \to \infty\)</span>.</em></p>
+<p>What is the discrete equivalent of this?</p>
+</section>
+<section id="ingredients-of-clt" class="level2">
+<h2 class="anchored" data-anchor-id="ingredients-of-clt">Ingredients of CLT</h2>
+<p><span class="math display">\[ \frac{1}{\sqrt{n}} \big((X_1 + \cdots + X_n) - n\mu\big) \to \operatorname{N}(0, \sigma^2) \]</span></p>
+<div class="incremental">
+<ul>
+<li>Expectation</li>
+<li>Variance</li>
+<li>Adding independent random variables</li>
+<li>Shifting</li>
+<li>Scaling</li>
+<li>The normal distribution</li>
+</ul>
+</div>
+</section>
+<section id="stock-take" class="level2">
+<h2 class="anchored" data-anchor-id="stock-take">Stock-take</h2>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Continuous</th>
+<th style="text-align: center;">Discrete</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Expectation <span class="math inline">\(\mathbb EX\)</span></td>
+<td style="text-align: center;">Expectation <span class="math inline">\(\mathbb EX\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Variance <span class="math inline">\(\operatorname{Var}(X)\)</span></td>
+<td style="text-align: center;">???</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Adding independent RVs <span class="math inline">\(X+Y\)</span></td>
+<td style="text-align: center;">Adding independent RVs <span class="math inline">\(X+Y\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Shifting <span class="math inline">\(X + b\)</span></td>
+<td style="text-align: center;">???</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Scaling <span class="math inline">\(aX\)</span></td>
+<td style="text-align: center;">Thinning <span class="math inline">\(a \circ X\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Normal distribution</td>
+<td style="text-align: center;">???</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Central limit theorem</td>
+<td style="text-align: center;">???</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="dispersion-motivation" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="dispersion-motivation">Dispersion: Motivation</h2>
+<div class="column" style="width:49%;">
+<ul>
+<li><p>Often, we model “measurement data” using a fixed value <span class="math inline">\(X = \mu\)</span>.</p></li>
+<li><p>This forces <span class="math inline">\(\operatorname{Var}(X) = 0\)</span>.</p>
+<ul>
+<li>Equivalently, this forces <span class="math inline">\(\mathbb EX^{2} = \mu^2\)</span>.</li>
+</ul></li>
+<li><p>But often, real-life data is<br>
+“noisy”, in that the variance is<br>
+<em>bigger</em> than 0.</p>
+<ul>
+<li>This requires a model with <span class="math inline">\(\mathbb EX^{2} &gt; \mu^2\)</span></li>
+</ul></li>
+</ul>
+</div>
+<div class="column" style="width:49%;">
+<div class="fragment">
+<ul>
+<li><p>Often, we model “count data” using the Poisson<span class="math inline">\((\mu)\)</span> distribution.</p></li>
+<li><p>This forces <span class="math inline">\(\operatorname{Var}(X) = \mu\)</span>.</p>
+<ul>
+<li>Equivalently, this forces <span class="math inline">\(\mathbb EX^{\underline{2}} = \mu^2\)</span>.</li>
+</ul></li>
+<li><p>But often, real-life data is<br>
+“over-dispersed”, in that the variance is <em>bigger</em> than the mean.</p>
+<ul>
+<li>This requires a model with <span class="math inline">\(\mathbb EX^{\underline{2}} &gt; \mu^2\)</span></li>
+</ul></li>
+</ul>
+</div>
+</div>
+</section>
+<section id="dispersion-definition" class="level2">
+<h2 class="anchored" data-anchor-id="dispersion-definition">Dispersion: Definition</h2>
+<p><strong>Variance:</strong> <span class="math inline">\(\operatorname{Var}(X) = \mathbb EX^2 - (\mathbb EX)^2\)</span></p>
+<p><strong>Dispersion:</strong> <span class="math inline">\(\operatorname{Disp}(X) = \mathbb EX^{\underline{2}} - \mathbb EX^2 =\operatorname{Var}(X) - \mu\)</span>.</p>
+<div class="incremental">
+<p>Can’t be <em>any</em> values:</p>
+<ul>
+<li><span class="math inline">\(\operatorname{Var}(X) \geq 0\)</span></li>
+<li><span class="math inline">\(\operatorname{Disp}(X) \geq -\mu\)</span></li>
+</ul>
+<p>Benchmarks:</p>
+<ul>
+<li><span class="math inline">\(\operatorname{Var}\big(\delta(\mu)\big) = 0\)</span>, smallest possible</li>
+<li><span class="math inline">\(\operatorname{Disp}\big(\operatorname{Po}(\mu)\big) = 0\)</span>, <em>not</em> smallest possible</li>
+</ul>
+</div>
+</section>
+<section id="dispersion-properties" class="level2">
+<h2 class="anchored" data-anchor-id="dispersion-properties">Dispersion: properties</h2>
+<ul>
+<li><span class="math inline">\(\operatorname{Var}(X+Y) = \operatorname{Var}(X) + \operatorname{Var}(Y)\)</span><br>
+for independent <span class="math inline">\(X, Y\)</span></li>
+<li><span class="math inline">\(\operatorname{Var}(aX) = a^2\,\operatorname{Var}(X)\)</span></li>
+</ul>
+<p>&nbsp;</p>
+<ul>
+<li><span class="math inline">\(\operatorname{Disp}(X+Y) = \operatorname{Disp}(X) + \operatorname{Disp}(Y)\)</span><br>
+for independent <span class="math inline">\(X, Y\)</span></li>
+<li><span class="math inline">\(\operatorname{Disp}(a\circ X) = a^2\,\operatorname{Disp}(X)\)</span></li>
+</ul>
+</section>
+<section id="dispersion-examples" class="level2">
+<h2 class="anchored" data-anchor-id="dispersion-examples">Dispersion: Examples</h2>
+<table class="table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Distribution</th>
+<th style="text-align: center;">Var/Disp</th>
+<th style="text-align: center;">Distribution</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Exponential<span class="math inline">\(\big(\frac{1}{\theta}\big)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\theta^2\)</span></td>
+<td style="text-align: center;">Geometric<span class="math inline">\(\big(\frac{1}{1+\theta}\big)\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Gamma<span class="math inline">\(\big(n, \frac{1}{\theta}\big)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(n\theta^2\)</span></td>
+<td style="text-align: center;">NegBin<span class="math inline">\(\big(n, \frac{1}{1+\theta}\big)\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Point mass <span class="math inline">\(\delta(\mu)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0\)</span></td>
+<td style="text-align: center;">Poisson<span class="math inline">\((\mu)\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">—</td>
+<td style="text-align: center;"><span class="math inline">\(-\theta^2\)</span></td>
+<td style="text-align: center;">Bernoulli<span class="math inline">\((\theta)\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">—</td>
+<td style="text-align: center;"><span class="math inline">\(-n\theta^2\)</span></td>
+<td style="text-align: center;">Binomial<span class="math inline">\((n, \theta)\)</span></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="stock-take-2" class="level2">
+<h2 class="anchored" data-anchor-id="stock-take-2">Stock-take (2)</h2>
+<table class="table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Continuous</th>
+<th style="text-align: center;">Discrete</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Expectation <span class="math inline">\(\mathbb EX\)</span></td>
+<td style="text-align: center;">Expectation <span class="math inline">\(\mathbb EX\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Variance <span class="math inline">\(\operatorname{Var}(X)\)</span></td>
+<td style="text-align: center;"><strong>Dispersion</strong> <span class="math inline">\(\operatorname{Disp}(X)\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Adding independent RVs <span class="math inline">\(X+Y\)</span></td>
+<td style="text-align: center;">Adding independent RVs <span class="math inline">\(X+Y\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Shifting <span class="math inline">\(X + b\)</span></td>
+<td style="text-align: center;">???</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Scaling <span class="math inline">\(aX\)</span></td>
+<td style="text-align: center;">Thinning <span class="math inline">\(a \circ X\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Normal distribution</td>
+<td style="text-align: center;">???</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Central limit theorem</td>
+<td style="text-align: center;">???</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="shifting-and-poisson-shifting" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="shifting-and-poisson-shifting">Shifting and Poisson shifting</h2>
+<div class="column" style="width:49%;">
+<p><strong>Shifting</strong> by <span class="math inline">\(b\)</span> means adding<br>
+a point mass <span class="math inline">\(\delta(b)\)</span><br>
+to <span class="math inline">\(X\)</span>, to get <span class="math inline">\(X + b\)</span></p>
+<ul>
+<li><span class="math inline">\(\mathbb E(X+b) = \mathbb EX + b\)</span></li>
+<li><span class="math inline">\(\operatorname{Var}(X+b) = \operatorname{Var}(X)\)</span></li>
+<li><span class="math inline">\((X+b)+c = X + (b+c)\)</span></li>
+<li><span class="math inline">\(M_{X+b}(t) = \mathrm{e}^{bt}\,M_X(t)\)</span></li>
+</ul>
+</div>
+<div class="column" style="width:49%;">
+<div class="fragment">
+<p><strong>Poisson shifting</strong> by <span class="math inline">\(b \geq 0\)</span> means adding<br>
+an independent Poisson distribution <span class="math inline">\(\operatorname{Po}(b)\)</span><br>
+to <span class="math inline">\(X\)</span>, to get <span class="math inline">\(X \oplus b\)</span></p>
+<ul>
+<li><span class="math inline">\(\mathbb E(X\oplus b) = \mathbb EX + b\)</span></li>
+<li><span class="math inline">\(\operatorname{Disp}(X \oplus b) = \operatorname{Disp}(X)\)</span></li>
+<li><span class="math inline">\((X\oplus b)\oplus c = X \oplus (b+c)\)</span></li>
+<li><span class="math inline">\(\Phi_{X\oplus b}(t) = \mathrm{e}^{bt}\,\Phi_X(t)\)</span></li>
+</ul>
+</div>
+</div>
+</section>
+<section id="poisson-left-shifting" class="level2">
+<h2 class="anchored" data-anchor-id="poisson-left-shifting">Poisson left shifting</h2>
+<p><strong>Poisson shifting</strong> by <span class="math inline">\(b \geq 0\)</span> means adding an independent Poisson distribution <span class="math inline">\(\operatorname{Po}(b)\)</span> to <span class="math inline">\(X\)</span>, to get <span class="math inline">\(X \oplus b\)</span></p>
+<p>What about negative shifts?</p>
+<div class="incremental">
+<p><span class="math inline">\(Y = X \ominus b\)</span> should be “the distribution <span class="math inline">\(Y\)</span> such that <span class="math inline">\(Y \oplus b = X\)</span>”.</p>
+</div>
+<div class="incremental">
+<ul>
+<li><span class="math inline">\(\operatorname{Po}(\mu) \ominus b = \operatorname{Po}(\mu - b)\)</span> only exists for <span class="math inline">\(b \leq \mu\)</span></li>
+<li>Bernoulli<span class="math inline">\((\theta) \ominus b\)</span> does not exist for any <span class="math inline">\(b &gt; 0\)</span>.</li>
+<li>Binomial<span class="math inline">\((n, \theta) \ominus b\)</span> does not exist for any <span class="math inline">\(b &gt; 0\)</span>.</li>
+</ul>
+</div>
+</section>
+<section id="poisson-left-shifting-questions" class="level2">
+<h2 class="anchored" data-anchor-id="poisson-left-shifting-questions">Poisson left shifting: Questions</h2>
+<ul>
+<li><span class="math inline">\(\operatorname{Po}(\mu) \ominus b = \operatorname{Po}(\mu - b)\)</span> only exists for <span class="math inline">\(b \leq \mu\)</span></li>
+<li>Bernoulli<span class="math inline">\((\theta) \ominus b\)</span> does not exist for any <span class="math inline">\(b &gt; 0\)</span>.</li>
+<li>Binomial<span class="math inline">\((n, \theta) \ominus b\)</span> does not exist for any <span class="math inline">\(b &gt; 0\)</span>.</li>
+</ul>
+<p><strong>Question.</strong> <em>What conditions on <span class="math inline">\(X\)</span> and <span class="math inline">\(b &gt; 0\)</span> guarantee the existence of <span class="math inline">\(X \ominus b\)</span>?</em></p>
+<p><strong>Question.</strong> <em>For what <span class="math inline">\(n\)</span>, <span class="math inline">\(\theta\)</span>, <span class="math inline">\(b&gt;0\)</span> (if any) does <span class="math inline">\(\operatorname{Geom}\big(\frac{1}{1+\theta}\big)\ominus b\)</span> or <span class="math inline">\(\operatorname{NegBin}\big(n, \frac{1}{1+\theta}\big)\ominus b\)</span> exist?</em></p>
+</section>
+<section id="stock-take-2-1" class="level2">
+<h2 class="anchored" data-anchor-id="stock-take-2-1">Stock-take (2)</h2>
+<table class="table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Continuous</th>
+<th style="text-align: center;">Discrete</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Expectation <span class="math inline">\(\mathbb EX\)</span></td>
+<td style="text-align: center;">Expectation <span class="math inline">\(\mathbb EX\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Variance <span class="math inline">\(\operatorname{Var}(X)\)</span></td>
+<td style="text-align: center;">Dispersion <span class="math inline">\(\operatorname{Disp}(X)\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Adding independent RVs <span class="math inline">\(X+Y\)</span></td>
+<td style="text-align: center;">Adding independent RVs <span class="math inline">\(X+Y\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Shifting <span class="math inline">\(X + b\)</span></td>
+<td style="text-align: center;"><strong>Poisson shifting</strong>??</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Scaling <span class="math inline">\(aX\)</span></td>
+<td style="text-align: center;">Thinning <span class="math inline">\(a \circ X\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Normal distribution</td>
+<td style="text-align: center;">???</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Central limit theorem</td>
+<td style="text-align: center;">???</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="hermite-distribution" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="hermite-distribution">Hermite distribution</h2>
+<p>The <strong>Hermite distribution</strong> of Kemp &amp; Kemp (1965):</p>
+<ul>
+<li>Parameters <span class="math inline">\(\mu\)</span> and <span class="math inline">\(s\)</span>, where <span class="math inline">\(\mu \geq s \geq 0\)</span>.</li>
+<li>Let <span class="math inline">\(U \sim \operatorname{Po}(\mu - s)\)</span> and <span class="math inline">\(V \sim \operatorname{Po}\big(\frac s2\big)\)</span></li>
+<li>The <span class="math inline">\(X = U + 2V\)</span> has the <strong>Hermite distribution</strong> <span class="math inline">\(\operatorname{Herm}(\mu, s)\)</span>.</li>
+</ul>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>CD Kemp &amp; AW Kemp, <a href="https://doi.org/10.1093/biomet/52.3-4.381">“Some properties of the ‘Hermite’ distribution”</a>, <em>Biometrika</em>, 1965</p>
+</div></div></section>
+<section id="hermite-distribution-properties" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="hermite-distribution-properties">Hermite distribution: Properties</h2>
+<p><span class="math display">\[\operatorname{Herm}(\mu, s) = \operatorname{Po}(\mu - s) + 2\,\operatorname{Po}\big(\tfrac s2\big)\]</span></p>
+<table class="table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Normal<span class="math inline">\((\mu, \sigma^2)\)</span></th>
+<th style="text-align: center;">Hermite<span class="math inline">\((\mu, s)\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Continuous</td>
+<td style="text-align: center;">Discrete</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(\mathbb EX = \mu\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\mathbb EX = \mu\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(\operatorname{Var}(X) = \sigma^2\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\operatorname{Disp}(X) = s\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(\operatorname{N}(\mu, 0) = \delta(\mu)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\operatorname{Herm}(\mu, 0) = \operatorname{Po}(\mu)\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(aX \sim \operatorname{N}(a\mu, a^2\sigma^2)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(a \circ X \sim \operatorname{Herm}(a\mu, a^2s)\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(X + b \sim \operatorname{N}(\mu + b, \sigma^2)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(X \oplus b \sim \operatorname{Herm}(\mu+b,s)\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(X + Y \sim \operatorname{N}(\mu_X + \mu_Y, \sigma^2_X + \sigma^2_Y)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(X + Y \sim \operatorname{Herm}(\mu_X + \mu_Y, s_X + s_Y)\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(M_X(t) = \exp\big(\mu t + \tfrac12 \sigma^2 t^2 \big)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\Phi_X(t) = \exp\big(\mu t + \tfrac12 s t^2 \big)\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Exists for all <span class="math inline">\(\sigma^2 \geq 0\)</span></td>
+<td style="text-align: center;">Does not exist for <span class="math inline">\(-\mu\leq s&lt; 0\)</span> or <span class="math inline">\(s &gt; \mu\)</span>.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="stock-take-3" class="level2">
+<h2 class="anchored" data-anchor-id="stock-take-3">Stock-take (3)</h2>
+<table class="table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Continuous</th>
+<th style="text-align: center;">Discrete</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Expectation <span class="math inline">\(\mathbb EX\)</span></td>
+<td style="text-align: center;">Expectation <span class="math inline">\(\mathbb EX\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Variance <span class="math inline">\(\operatorname{Var}(X)\)</span></td>
+<td style="text-align: center;">Dispersion <span class="math inline">\(\operatorname{Disp}(X)\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Adding independent RVs <span class="math inline">\(X+Y\)</span></td>
+<td style="text-align: center;">Adding independent RVs <span class="math inline">\(X+Y\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Shifting <span class="math inline">\(X + b\)</span></td>
+<td style="text-align: center;">Poisson shifting??</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Scaling <span class="math inline">\(aX\)</span></td>
+<td style="text-align: center;">Thinning <span class="math inline">\(a \circ X\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Normal distribution</td>
+<td style="text-align: center;">Hermite distribution?</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Central limit theorem</td>
+<td style="text-align: center;">???</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="central-limit-theorem-1" class="level2">
+<h2 class="anchored" data-anchor-id="central-limit-theorem-1">Central limit theorem</h2>
+<p>We’d like to replace the CLT’s <span class="math display">\[ Z_n = \frac{1}{\sqrt{n}} \big( (X_1 + \cdots + X_n) - \mu n \big) \to \operatorname{N}(0, \sigma^2)\]</span> by the discrete equivalent (for <span class="math inline">\(\operatorname{Disp}(X) = s \geq 0\)</span>) <span class="math display">\[ Z_n = \frac{1}{\sqrt{n}} \circ \big( (X_1 + \cdots + X_n) \ominus \mu n\big) \to \operatorname{Herm}(0, s)\]</span></p>
+<div class="incremental">
+<p>…but this <span class="math inline">\(Z_n\)</span> doesn’t exist.</p>
+<p>(Except for <span class="math inline">\(X_i \sim \operatorname{Po}(\mu)\)</span>, when <span class="math inline">\(Z_n = \delta(0)\)</span>.)</p>
+</div>
+</section>
+<section id="central-limit-shifted" class="level2">
+<h2 class="anchored" data-anchor-id="central-limit-shifted">Central limit shifted</h2>
+<p>Jørgensen &amp; Kokonendji (2016) suggest a shifted CLT <span class="math display">\[ Z_n = \frac{1}{\sqrt{n}} \big( (X_1 + \cdots + X_n) - (\mu n - c\sqrt{n} )\big) \to \operatorname{N}(c, \sigma^2)\]</span> with discrete equivalent <span class="math display">\[ Z_n = \frac{1}{\sqrt{n}} \circ \big( (X_1 + \cdots + X_n) \ominus (\mu n - c\sqrt{n}) \big) \to \operatorname{Herm}(c, s)\]</span> where <span class="math inline">\(c &gt; s \geq 0\)</span> ensures the Hermite distribution on the right exists…</p>
+<div class="incremental">
+<p>…but doesn’t ensure the <span class="math inline">\(Z_n\)</span> on the left exists.</p>
+</div>
+</section>
+<section id="discrete-clt-questions" class="level2">
+<h2 class="anchored" data-anchor-id="discrete-clt-questions">Discrete CLT: Questions</h2>
+<p><span class="math display">\[ Z_n = \frac{1}{\sqrt{n}} \circ \big( (X_1 + \cdots + X_n) \ominus (\mu n - c\sqrt{n}) \big) \to \operatorname{Herm}(c, s)\]</span></p>
+<ul>
+<li><strong>Question.</strong> <em>What conditions on <span class="math inline">\(X\)</span> guarantee the existence of <span class="math inline">\(Z_n\)</span>?</em></li>
+<li><strong>Question.</strong> <em>Can we make sense of this limit even if <span class="math inline">\(Z_n\)</span> does not itself exist?</em></li>
+<li><strong>Question.</strong> <em>Are there other ways we can understand</em><br>
+<em>“<span class="math inline">\(Y_n \approx \operatorname{Herm}(\mu, s/n)\)</span>”?</em></li>
+<li><strong>Question.</strong> <em>What about <span class="math inline">\(X\)</span>s with negative dispersion?</em></li>
+</ul>
+</section>
+<section id="discrete-clt-conclusions" class="level2">
+<h2 class="anchored" data-anchor-id="discrete-clt-conclusions">Discrete CLT: Conclusions</h2>
+<ul>
+<li><strong>Dispersion</strong> is an interesting alternative to the variance</li>
+<li>The <strong>Hermite distribution</strong> is a good candidate for a “discrete normal”</li>
+<li>“Negative <strong>Poisson shifts</strong>” need more investigation</li>
+<li>It’s not yet clear (to me) what the correct “<strong>discrete central limit theorem</strong>” is</li>
+</ul>
+</section>
+</section>
+<section id="various-other-questions" class="level1">
+<h1>4. Various other questions…</h1>
+<section id="size-biasing" class="level2">
+<h2 class="anchored" data-anchor-id="size-biasing">Size biasing</h2>
+<p>The <strong>size-biased</strong> version of a count random variable <span class="math inline">\(X\)</span> is <span class="math inline">\(X^\sharp\)</span>, where <span class="math display">\[ \mathbb P(X^\sharp = x - 1) = \frac{1}{\mu}\, x\, \mathbb P(X = x) \qquad x \geq 1\]</span></p>
+<p><strong>Question.</strong> <em>Is it interesting to look at size-biasing through the lens of the FMGF?</em></p>
+</section>
+<section id="entropy" class="level2">
+<h2 class="anchored" data-anchor-id="entropy">Entropy</h2>
+<ul>
+<li><p><strong>Question.</strong> <em>Is the some condition under which the Hermite distribution is maximum entropy?</em></p></li>
+<li><p><strong>Question.</strong> <em>Are there ways in which inequalities on FMGFs can transfer to inequalities on entropy?</em></p>
+<ul>
+<li>Eg, is it true that is <span class="math inline">\(\Phi_X(t) \leq \mathrm{e}^{\mu t}\)</span><br>
+then <span class="math inline">\(H(X) \leq H(\operatorname{Po}(\mu))\)</span>?</li>
+</ul></li>
+<li><p><strong>Question.</strong> <em>What is the discrete equivalent of the “entropy power inequality”?</em></p></li>
+</ul>
+</section>
+<section id="stochastic-orderings" class="level2">
+<h2 class="anchored" data-anchor-id="stochastic-orderings">Stochastic orderings</h2>
+<ul>
+<li><p><strong>Question.</strong> <em>Are there ways in which certain orderings on random variables are revealed through the FMGF?</em></p></li>
+<li><p><strong>Question.</strong> <em>Is it true that if the FMGF <span class="math inline">\(\Phi_X(t)\)</span> is log-concave then <span class="math inline">\(X \preceq \operatorname{Po}(\mu)\)</span> in the convex ordering?</em></p></li>
+<li><p><strong>Question.</strong> <em>Does this give any insight into when the Poisson shift <span class="math inline">\(X \ominus b\)</span> exists?</em></p></li>
+</ul>
+</section>
+<section id="reflection" class="level2">
+<h2 class="anchored" data-anchor-id="reflection">Reflection</h2>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Distribution</th>
+<th style="text-align: center;">FMGF</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Bernoulli<span class="math inline">\((\theta)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\Phi_X(t) = 1 + \theta t\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Binomial<span class="math inline">\((n, \theta)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\Phi_X(t) = (1 + \theta t)^n\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Geometric<span class="math inline">\((\frac{1}{1+\theta})\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\Phi_X(t) = (1 - \theta t)^{-1}\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">NegBin<span class="math inline">\((n,\frac{1}{1+\theta})\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\Phi_X(t) = (1 - \theta t)^{-n}\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Poisson<span class="math inline">\((\mu)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\Phi_X(t) = \mathrm{e}^{\mu t}\)</span></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="reflection-definition" class="level2">
+<h2 class="anchored" data-anchor-id="reflection-definition">Reflection: Definition</h2>
+<p>Given <span class="math inline">\(X\)</span> with FMGF <span class="math inline">\(\Phi_X(t)\)</span>, define the <strong>reflection</strong> <span class="math inline">\(X^*\)</span> to be the random variable with FMGF <span class="math inline">\(\Phi_{X^*}(t) =\Phi_X(-t)^{-1}\)</span>, if it exists.</p>
+</section>
+<section id="reflection-examples" class="level2">
+<h2 class="anchored" data-anchor-id="reflection-examples">Reflection: Examples</h2>
+<ul>
+<li><span class="math inline">\(\operatorname{Bern}(\theta)^* = \operatorname{Geom}\big(\frac{1}{1+\theta}\big)\)</span></li>
+<li><span class="math inline">\(\operatorname{Bin}(n, \theta)^* = \operatorname{NegBin}\big(n, \frac{1}{1+\theta}\big)\)</span></li>
+<li><span class="math inline">\(\operatorname{Geom}\big(\frac{1}{1+\theta}\big)^* = \operatorname{Bern}(\theta)\)</span> for <span class="math inline">\(\theta \leq 1\)</span>,<br>
+but doesn’t exist for <span class="math inline">\(\theta &gt; 1\)</span></li>
+<li><span class="math inline">\(\operatorname{NegBin}\big(n, \frac{1}{1+\theta}\big)^* = \operatorname{Bin}(n,\theta)\)</span> for <span class="math inline">\(\theta \leq 1\)</span>,<br>
+but doesn’t exist for <span class="math inline">\(\theta &gt; 1\)</span></li>
+<li><span class="math inline">\(\operatorname{Po}(\mu)^* = \operatorname{Po}(\mu)\)</span></li>
+<li><span class="math inline">\(\operatorname{Herm}(\mu, s)^*\)</span> doesn’t exist (except for <span class="math inline">\(s = 0\)</span>)</li>
+</ul>
+</section>
+<section id="reflection-questions" class="level2">
+<h2 class="anchored" data-anchor-id="reflection-questions">Reflection: Questions</h2>
+<ul>
+<li><strong>Question.</strong> <em>What are some properties of the reflection?</em>
+<ul>
+<li><span class="math inline">\(\mathbb EX^* = \mathbb EX\)</span> and <span class="math inline">\(\operatorname{Disp}(X^*) = - \operatorname{Disp}(X)\)</span></li>
+<li>Is it true that if <span class="math inline">\(H(X) \leq H(Y)\)</span> then <span class="math inline">\(H(X^*) \geq H(Y^*)\)</span>?</li>
+</ul></li>
+<li><strong>Question.</strong> <em>What conditions on <span class="math inline">\(X\)</span> guarantee the existence of the reflection <span class="math inline">\(X^*\)</span>?</em></li>
+<li><strong>Question.</strong> <em>Is this reflection operator a useful concept? Is it already well known?</em></li>
+</ul>
+</section>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+<hr>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">General RVs</th>
+<th style="text-align: center;">Counting RVs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Moments</td>
+<td style="text-align: center;">Falling moments</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">MGF</td>
+<td style="text-align: center;">FMGF</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Variance</td>
+<td style="text-align: center;">Dispersion</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Point mass</td>
+<td style="text-align: center;">Poisson distribution</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Adding independent RVs</td>
+<td style="text-align: center;">Adding independent RVs</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Scaling</td>
+<td style="text-align: center;">Thinning</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Shifting</td>
+<td style="text-align: center;">Poisson shifting</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Law of large numbers</td>
+<td style="text-align: center;">Law of thin numbers</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Central limit theorem</td>
+<td style="text-align: center;">???</td>
+</tr>
+</tbody>
+</table>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
